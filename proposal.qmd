@@ -40,7 +40,7 @@ pacman::p_load(tidyverse,
 
 The [Big Tech Stock Prices](https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-02-07) dataset, sourced from the TidyTuesday project, provides a comprehensive overview of the daily stock prices and trading volumes of 14 prominent technology companies. The list of industry giants that are studied for data analysis are Apple, Adobe, Amazon.com, Salesforce, Cisco Systems, Alphabet, IBM, Intel, Meta, Microsoft, Netflix, NVIDIA, Oracle and TESLA.
 
-Comprising two tables, namely big_tech_stock_prices.csv and big_tech_companies.csv, this dataset offers a ample amount of information for conducting in-depth analysis and exploring various aspects of the stock market. The big_tech_stock_prices.csv file contains detailed records of daily stock prices and trading volumes for each company, while the big_tech_companies.csv file provides additional information about the included companies, such as their names and stock symbols.
+Comprising two tables, namely `big_tech_stock_prices.csv` and `big_tech_companies.csv`, this dataset offers a ample amount of information for conducting in-depth analysis and exploring various aspects of the stock market. The `big_tech_stock_prices.csv` file contains detailed records of daily stock prices and trading volumes for each company, while the `big_tech_companies.csv` file provides additional information about the included companies, such as their names and stock symbols.
 
 The Big Tech Stock Prices dataset offers a comprehensive and reliable source of data for conducting insightful analyses and making informed decisions in the financial domain related to these specific companies.
 
@@ -76,7 +76,7 @@ big_tech_stock_prices |>
 [*Variable description*]{.underline}
 
 | variable       | class     | description                                                                                                                                                                                                                       |
-|-------------------|-------------------|----------------------------------|
+|----------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `stock_symbol` | character | stock_symbol                                                                                                                                                                                                                      |
 | `date`         | double    | date                                                                                                                                                                                                                              |
 | `open`         | double    | The price at market open.                                                                                                                                                                                                         |
