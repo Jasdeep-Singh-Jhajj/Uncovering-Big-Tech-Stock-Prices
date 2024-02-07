@@ -1,5 +1,54 @@
 [
   {
+    "objectID": "proposal.html",
+    "href": "proposal.html",
+    "title": "Big Tech Stock Prices Visualization",
+    "section": "",
+    "text": "Installed Packages\n### GETTING THE LIBRARIES\ndevtools::install_github(\"choonghyunryu/dlookr\")\n\nif (!require(pacman))\n  install.packages(pacman)\n\npacman::p_load(tidyverse,\n               tidytuesdayR,\n               dlookr,\n               formattable)"
+  },
+  {
+    "objectID": "proposal.html#dataset",
+    "href": "proposal.html#dataset",
+    "title": "Big Tech Stock Prices Visualization",
+    "section": "Dataset",
+    "text": "Dataset\nThe Big Tech Stock Prices dataset, sourced from the TidyTuesday project, provides a comprehensive overview of the daily stock prices and trading volumes of 14 prominent technology companies. The list of industry giants that are studied for data analysis are Apple, Adobe, Amazon.com, Salesforce, Cisco Systems, Alphabet, IBM, Intel, Meta, Microsoft, Netflix, NVIDIA, Oracle and TESLA.\nComprising two tables, namely big_tech_stock_prices.csv and big_tech_companies.csv, this dataset offers a ample amount of information for conducting in-depth analysis and exploring various aspects of the stock market. The big_tech_stock_prices.csv file contains detailed records of daily stock prices and trading volumes for each company, while the big_tech_companies.csv file provides additional information about the included companies, such as their names and stock symbols.\nThe Big Tech Stock Prices dataset offers a comprehensive and reliable source of data for conducting insightful analyses and making informed decisions in the financial domain related to these specific companies.\n\nbigtech &lt;- tidytuesdayR::tt_load('2023-02-07')\nbig_tech_stock_prices &lt;- bigtech$big_tech_stock_prices\nbig_tech_companies &lt;- bigtech$big_tech_companies\n\n\nStock Prices Dataset\nThe dataset contains 14 big tech companies daily stock prices with a total of approx. 45088 observations. There is no missing data in the observation which helps to use all the columns available in the data set.\n\n\nStock Prices Dataset Code\nbig_tech_stock_prices |&gt;\n  diagnose() |&gt;\n  dplyr::select(-missing_percent) |&gt;\n  formattable()\n\n\n\n\n\n\n\nvariables\n\n\ntypes\n\n\nmissing_count\n\n\nunique_count\n\n\nunique_rate\n\n\n\n\n\n\nstock_symbol\n\n\ncharacter\n\n\n0\n\n\n14\n\n\n0.0003105039\n\n\n\n\ndate\n\n\nDate\n\n\n0\n\n\n3287\n\n\n0.0729018808\n\n\n\n\nopen\n\n\nnumeric\n\n\n0\n\n\n29798\n\n\n0.6608853797\n\n\n\n\nhigh\n\n\nnumeric\n\n\n0\n\n\n30056\n\n\n0.6666075231\n\n\n\n\nlow\n\n\nnumeric\n\n\n0\n\n\n30028\n\n\n0.6659865153\n\n\n\n\nclose\n\n\nnumeric\n\n\n0\n\n\n30965\n\n\n0.6867680979\n\n\n\n\nadj_close\n\n\nnumeric\n\n\n0\n\n\n41279\n\n\n0.9155207594\n\n\n\n\nvolume\n\n\nnumeric\n\n\n0\n\n\n43550\n\n\n0.9658889283\n\n\n\n\n\n\n\nVariable description\n\n\n\n\n\n\n\n\nvariable\nclass\ndescription\n\n\n\n\nstock_symbol\ncharacter\nstock_symbol\n\n\ndate\ndouble\ndate\n\n\nopen\ndouble\nThe price at market open.\n\n\nhigh\ndouble\nThe highest price for that day.\n\n\nlow\ndouble\nThe lowest price for that day.\n\n\nclose\ndouble\nThe price at market close, adjusted for splits.\n\n\nadj_close\ndouble\nThe closing price after adjustments for all applicable splits and dividend distributions. Data is adjusted using appropriate split and dividend multipliers, adhering to Center for Research in Security Prices (CRSP) standards.\n\n\nvolume\ndouble\nThe number of shares traded on that day.\n\n\n\nWhen we summarize the data to observe the range for start and end date of the stock data available, we could notice the data is available for 12 years except for Meta which starts from year 2012.\n\n\nStock Prices Date Range Code\nbig_tech_stock_prices |&gt; \n  group_by(stock_symbol) |&gt; \n  summarize(min_date = min(date), max_date = max(date)) |&gt; \n  formattable()\n\n\n\n\n\n\n\nstock_symbol\n\n\nmin_date\n\n\nmax_date\n\n\n\n\n\n\nAAPL\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nADBE\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nAMZN\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nCRM\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nCSCO\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nGOOGL\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nIBM\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nINTC\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nMETA\n\n\n2012-05-18\n\n\n2023-01-24\n\n\n\n\nMSFT\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nNFLX\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nNVDA\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nORCL\n\n\n2010-01-04\n\n\n2022-12-29\n\n\n\n\nTSLA\n\n\n2010-06-30\n\n\n2022-12-29\n\n\n\n\n\n\n\n\n\nBig Tech Companies Dataset\nBig Tech Companies dataset provides the company names against the stock symbols.\n\n\nBig Tech Companies Dataset Code\nbig_tech_companies |&gt;\n  formattable()\n\n\n\n\n\n\n\nstock_symbol\n\n\ncompany\n\n\n\n\n\n\nAAPL\n\n\nApple Inc. \n\n\n\n\nADBE\n\n\nAdobe Inc. \n\n\n\n\nAMZN\n\n\nAmazon.com, Inc. \n\n\n\n\nCRM\n\n\nSalesforce, Inc. \n\n\n\n\nCSCO\n\n\nCisco Systems, Inc. \n\n\n\n\nGOOGL\n\n\nAlphabet Inc. \n\n\n\n\nIBM\n\n\nInternational Business Machines Corporation\n\n\n\n\nINTC\n\n\nIntel Corporation\n\n\n\n\nMETA\n\n\nMeta Platforms, Inc. \n\n\n\n\nMSFT\n\n\nMicrosoft Corporation\n\n\n\n\nNFLX\n\n\nNetflix, Inc. \n\n\n\n\nNVDA\n\n\nNVIDIA Corporation\n\n\n\n\nORCL\n\n\nOracle Corporation\n\n\n\n\nTSLA\n\n\nTesla, Inc. \n\n\n\n\n\n\n\n\n\nWhy did we choose this data set?\nWhile stock prices represent a familiar dataset, our decision to focus on it stems from a meticulous evaluation of both technical and analytical considerations. Given that stock prices embody a convergence of market sentiment and company performance, delving into this dataset promises valuable insights. Analyzing the trends and drivers within it empowers investors to make well-informed decisions.\nThe dataset itself is well-structured, comprising two tables. One table provides essential information such as date, open, and close, while the other details the associated company names.\nSpanning nearly a decade, this dataset offers a unique vantage point to observe trends from the post-financial crisis era to the third wave of the COVID-19 pandemic. Our objective is to create impactful visualizations for the top 14 big tech companies, aiming for a comprehensive understanding of how the tech industry has been perceived in the market during this significant timeframe.\nIn essence, our engagement with this dataset transcends mere technical considerations; it extends to encompass analytical aspects, enabling us to make well-informed decisions within the confines of the provided data."
+  },
+  {
+    "objectID": "proposal.html#questions",
+    "href": "proposal.html#questions",
+    "title": "Big Tech Stock Prices Visualization",
+    "section": "Questions",
+    "text": "Questions\nThe two questions to be answered are:\n\nWhich companies have experienced the highest/lowest impact on their stock prices due to the pandemic?\nWhat are the patterns in returns on stock prices based on days of the week and seasonality?"
+  },
+  {
+    "objectID": "proposal.html#analysis-plan",
+    "href": "proposal.html#analysis-plan",
+    "title": "Big Tech Stock Prices Visualization",
+    "section": "Analysis plan",
+    "text": "Analysis plan\nWe will be employing the following approaches to address the questions posed.\n\nApproach for question 1\nThe inquiry involves examining the impact of the pandemic on stock prices within a specific time-frame. To achieve this, we focus on key features: “dates” (to identify the pandemic period) and “stock price” (utilizing adj_close). The “Pandemic Period” is defined as starting from the year 2020, enabling us to assess stock prices during this particular time-frame. Calculations include determining the average returns within this period, as well as 3- and 5-year returns, along with their respective peak prices. This approach offers a comprehensive overview of the overall impact on a company’s stock price.\nFor our plot, we plan to use the x-axis and y-axis as follows:\nX-axis: Time (period): Plotted chronologically to illustrate the progression during the pandemic period. Each point on the x-axis corresponds to a specific period within this time-frameååå.\nY-axis: Returns- Utilized for plotting.\nFacets and colors will be employed to differentiate between the top big tech companies with the highest and lowest impact in terms of returns.\nThis visualization can be achieved using geom_line() , geom_col() and annotations can be added using geom_text()\n\n\nApproach for question 2\nTo analyze trends in stock prices across different companies, we will explore two dimensions: weekdays (Monday, Tuesday, Wednesday, Thursday and Friday) and Financial Quarters (Q1, Q2, Q3 and Q4).\nUtilizing day-wise data, we plan to visualize weekdays using the weekdays() function from base R. Additionally, we will augment our dataset with an additional column for year and quarter to facilitate more granular analysis. The aggregation of stock prices will involve calculating averages for high, low, and adj_close during the specified periods.\nOur visualization strategy may involve using geom_box() or geom_line() to determine the most effective representation. To enhance clarity, facets and colors will be employed to distinguish between companies and periods of interest.\nThis approach is expected to yield valuable insights into stock price trends, allowing us to uncover patterns related to both weekdays and financial quarters."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Big Tech Stock Prices",
+    "section": "",
+    "text": "Add project abstract here."
+  },
+  {
+    "objectID": "index.html#abstract",
+    "href": "index.html#abstract",
+    "title": "Big Tech Stock Prices",
+    "section": "",
+    "text": "Add project abstract here."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "This project was developed by [Crimson Team] For INFO 526 - Data Analysis and Visualization at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.\n\nTeam member 1: Jasdeep Singh Jhajj, is a 1st year graduate student in the Data Science program with the School of Information.\nTeam member 2: Mohit Rakesh Taparia, is a 1st year graduate student in the Data Science program with the School of Information.\nTeam member 3: Arun Koundinya Parasa, is a 2nd year graduate student in the Information Science program with the School of Information.\nTeam member 4: Pradnya Ramesh Raut, is a 2nd year graduate student in the Information Science program with the School of Information.\nTeam member 4: Varun Soni, is a 2nd year graduate student in the Information Science program with the School of Information."
+  },
+  {
     "objectID": "data/README 2.html",
     "href": "data/README 2.html",
     "title": "Data",
@@ -19,13 +68,6 @@
     "title": "Data",
     "section": "Data Types:",
     "text": "Data Types:\n\nColumn: data type"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "This project was developed by [Team Name] For INFO 526 - Data Analysis and Visualization at the University of Arizona, taught by Dr. Greg Chism. The team is comprised of the following team members.\n\nTeam member 1: One sentence description of Team member 1 (e.g., year, major, etc.).\nTeam member 2: One sentence description of Team member 2 (e.g., year, major, etc.).\nTeam member 3: One sentence description of Team member 3 (e.g., year, major, etc.).\nTeam member 4: One sentence description of Team member 4 (e.g., year, major, etc.)."
   },
   {
     "objectID": "presentation.html#quarto",
@@ -89,47 +131,5 @@
     "title": "Project title",
     "section": "Feeling adventurous?",
     "text": "Feeling adventurous?\n\nYou are welcomed to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.\nBut some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Project title",
-    "section": "",
-    "text": "Add project abstract here."
-  },
-  {
-    "objectID": "index.html#abstract",
-    "href": "index.html#abstract",
-    "title": "Project title",
-    "section": "",
-    "text": "Add project abstract here."
-  },
-  {
-    "objectID": "proposal.html",
-    "href": "proposal.html",
-    "title": "Proposal title",
-    "section": "",
-    "text": "library(tidyverse)"
-  },
-  {
-    "objectID": "proposal.html#dataset",
-    "href": "proposal.html#dataset",
-    "title": "Proposal title",
-    "section": "Dataset",
-    "text": "Dataset\nA brief description of your dataset including its provenance, dimensions, etc. as well as the reason why you chose this dataset.\nMake sure to load the data and use inline code for some of this information."
-  },
-  {
-    "objectID": "proposal.html#questions",
-    "href": "proposal.html#questions",
-    "title": "Proposal title",
-    "section": "Questions",
-    "text": "Questions\nThe two questions you want to answer."
-  },
-  {
-    "objectID": "proposal.html#analysis-plan",
-    "href": "proposal.html#analysis-plan",
-    "title": "Proposal title",
-    "section": "Analysis plan",
-    "text": "Analysis plan\n\nA plan for answering each of the questions including the variables involved, variables to be created (if any), external data to be merged in (if any)."
   }
 ]
