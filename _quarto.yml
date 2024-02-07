@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: Project Title
+  title: "<img src='/images/stock_prices.png' alt='Stock Symbol' style='width: 2.6em; height: 2.2em; border-radius: 30%;'> <b>Big Tech Stock Prices</b>"
   navbar:
     right:
       - icon: github

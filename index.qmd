@@ -1,7 +1,7 @@
 ---
-title: "Project title"
+title: "Big Tech Stock Prices"
 subtitle: "INFO 526 - Project 1"
-author: "Team name"
+author: "Team Crimson"
 format: html
 editor: visual
 ---
