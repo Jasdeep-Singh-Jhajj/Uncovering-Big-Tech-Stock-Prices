@@ -30,6 +30,7 @@ devtools::install_github("choonghyunryu/dlookr")
 if (!require(pacman))
   install.packages(pacman)
 
+# Loading the libraries
 pacman::p_load(tidyverse,
                tidytuesdayR,
                dlookr,
@@ -50,6 +51,7 @@ The Big Tech Stock Prices dataset offers a comprehensive and reliable source of 
 #| output: false
 #| warning: false
 
+# Loading the data from tidy tuesday repository
 bigtech <- tidytuesdayR::tt_load('2023-02-07')
 big_tech_stock_prices <- bigtech$big_tech_stock_prices
 big_tech_companies <- bigtech$big_tech_companies
@@ -67,6 +69,7 @@ The dataset contains 14 big tech companies daily stock prices with a total of ap
 #| code-fold: true
 #| code-summary: "Stock Prices Dataset Code"
 
+# Analyzing the data based on unique values for each variable.
 big_tech_stock_prices |>
   diagnose() |>
   dplyr::select(-missing_percent) |>
@@ -76,7 +79,7 @@ big_tech_stock_prices |>
 [*Variable description*]{.underline}
 
 | variable       | class     | description                                                                                                                                                                                                                       |
-|----------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|-------------|-------------|----------------------------------------------|
 | `stock_symbol` | character | stock_symbol                                                                                                                                                                                                                      |
 | `date`         | double    | date                                                                                                                                                                                                                              |
 | `open`         | double    | The price at market open.                                                                                                                                                                                                         |
@@ -95,6 +98,7 @@ When we summarize the data to observe the range for start and end date of the st
 #| code-fold: true
 #| code-summary: "Stock Prices Date Range Code"
 
+# Examining the data to know the date range.
 big_tech_stock_prices |> 
   group_by(stock_symbol) |> 
   summarize(min_date = min(date), max_date = max(date)) |> 
@@ -111,6 +115,7 @@ Big Tech Companies dataset provides the company names against the stock symbols.
 #| code-fold: true
 #| code-summary: "Big Tech Companies Dataset Code"
 
+# Viewing the data of big tech companies.
 big_tech_companies |>
   formattable()
 ```
@@ -130,7 +135,7 @@ In essence, our engagement with this dataset transcends mere technical considera
 The two questions to be answered are:
 
 1.  Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?
-2.  What are the patterns in returns on stock prices based on days of the week and seasonality?
+2.  What are the patterns in returns on stock prices based on days of the week and financial quarters?
 
 ## Analysis plan
 
@@ -138,17 +143,15 @@ We will be employing the following approaches to address the questions posed.
 
 ### Approach for question 1
 
-The inquiry involves examining the impact of the pandemic on stock prices within a specific time-frame. To achieve this, we focus on key features: "dates" (to identify the pandemic period) and "stock price" (utilizing `adj_close`). The "Pandemic Period" is defined as starting from the year 2020, enabling us to assess stock prices during this particular time-frame. Calculations include determining the average returns within this period, as well as 3- and 5-year returns, along with their respective peak prices. This approach offers a comprehensive overview of the overall impact on a company's stock price.
+The inquiry involves examining the impact of the pandemic on stock prices within a specific time-frame. To achieve this, we focus on key features: "dates" (to identify the pandemic period) and "stock price" (utilizing `adj_close`). The "Pandemic Period" is defined as starting from the year 2020, enabling us to assess stock prices during this particular time-frame. Calculations include determining the average returns within this period, as well as 3- and 5-year returns, along with their respective peak prices. The impact is measured by the variance in stock prices, considering the returns over 1 year, 3 years, and 5 years, relative to both the pre-COVID year and the year of highest performance. This approach offers a comprehensive overview of the overall impact on a company's stock price.
 
-For our plot, we plan to use the x-axis and y-axis as follows:
+This visualization can be achieved using `geom_line()` , `geom_col()` and annotations can be added using `geom_text()`. Facets and colors will be employed to differentiate between the top big tech companies with the highest and lowest impact in terms of returns and we plan to use the x-axis and y-axis as follows:
 
 *X-axis*: Time (`period`): Plotted chronologically to illustrate the progression during the pandemic period. Each point on the x-axis corresponds to a specific period within this time-frameååå.
 
 *Y-axis*: `Returns`- Utilized for plotting.
 
-Facets and colors will be employed to differentiate between the top big tech companies with the highest and lowest impact in terms of returns.
-
-This visualization can be achieved using `geom_line()` , `geom_col()` and annotations can be added using `geom_text()`
+*Note: Given that we only have access to stock prices, establishing causality regarding the impact of stock prices in relation to COVID-19 may pose challenges. So, instead we will be observing trends and returns.*
 
 ### Approach for question 2
 
