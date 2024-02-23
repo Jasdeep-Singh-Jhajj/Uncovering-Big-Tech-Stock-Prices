@@ -44,7 +44,41 @@ Comprising two tables, namely `big_tech_stock_prices.csv` and `big_tech_companie
 
 ### Analysis
 
-\<\<\< Team-1 to write \>\>
+```{r}
+#| label: load-pkgs
+#| message: FALSE
+#| warning: FALSE
+#| echo: FALSE
+
+### GETTING THE LIBRARIES
+devtools::install_github("choonghyunryu/dlookr")
+
+if (!require(pacman))
+  install.packages(pacman)
+
+# Loading the libraries
+pacman::p_load(tidyverse,
+               tidytuesdayR,
+               dlookr,
+               formattable)
+
+```
+
+
+```{r}
+#| label: load-dataset
+#| message: FALSE
+#| warning: FALSE
+#| echo: FALSE
+
+# Loading the data from tidy tuesday repository
+bigtech <- tidytuesdayR::tt_load('2023-02-07')
+big_tech_stock_prices <- bigtech$big_tech_stock_prices
+big_tech_companies <- bigtech$big_tech_companies
+
+```
+
+
 
 ### Discussion
 
