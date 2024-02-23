@@ -1,11 +1,73 @@
 ---
 title: "Big Tech Stock Prices"
 subtitle: "INFO 526 - Project 1"
-author: "Team Crimson"
-format: html
+author: 
+  - name: "Team Crimson - Arun, Varun, Jasdeep, Mohit, Pradnya"
+format: 
+  html:
+    embed-resources: true
+    code-line-numbers: true
+    code-overflow: wrap
+    code-tools: true
 editor: visual
+code-annotations: hover
+categories: 
+  - Data visualization
+  - TidyTuesday
 ---
 
 ## Abstract
 
-Add project abstract here.
+This data visualization project aims to comprehend the patterns in the stock prices of major tech companies over a 10-year period. Given the inherent volatility of stock prices, various factors, including external disturbances, contribute to fluctuations. The project delves into comprehending the patterns in big tech company stock prices, particularly with respect to the impact of COVID-19. Our visualization techniques, including bar plots and line plots, play a crucial role in explaining the stock price phenomena.
+
+In the second part of the project, we offer a more lucid understanding of stock price trends across financial quarters and weekdays. This insightful analysis empowers stakeholders with the information needed for informed decision-making and the formulation of proactive trading strategies.
+
+[*Note: Given that we only have access to stock prices, establishing causality regarding the impact of stock prices in relation to COVID-19 may pose challenges. So, instead we will be observing trends and returns.*]{style="font-size: small;"}
+
+## Introduction
+
+The [Big Tech Stock Prices dataset](https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-02-07), sourced from the TidyTuesday project, provides a comprehensive overview of the daily stock prices and trading volumes of 14 prominent technology companies. The list of industry giants that are studied for data analysis are Apple, Adobe, Amazon.com, Salesforce, Cisco Systems, Alphabet, IBM, Intel, Meta, Microsoft, Netflix, NVIDIA, Oracle and TESLA.
+
+Comprising two tables, namely `big_tech_stock_prices.csv` and `big_tech_companies.csv`, this dataset offers a ample amount of information for conducting in-depth analysis and exploring various aspects of the stock market. The big_tech_stock_prices.csv file contains detailed records of daily stock prices and trading volumes for each company, while the big_tech_companies.csv file provides additional information about the included companies, such as their names and stock symbols.
+
+\<\<\< Pending to write \>\>
+
+## Question 1 : Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?
+
+### Introduction
+
+\<\<\< Team-1 to write \>\>
+
+### Approach
+
+\<\<\< Team-1 to write \>\>
+
+### Analysis
+
+\<\<\< Team-1 to write \>\>
+
+### Discussion
+
+\<\<\< Team-1 to write \>\>
+
+## Question 2 : What are the patterns in returns on stock prices based on days of the week and financial quarters?
+
+### Introduction
+
+\<\<\< Team-2 to write \>\>
+
+### Approach
+
+\<\<\< Team-2 to write \>\>
+
+### Analysis
+
+\<\<\< Team-2 to write \>\>
+
+### Discussion
+
+\<\<\< Team-2 to write \>\>
+
+## References
+
+\<\<\< Most Important ; Update as we go \>\>
