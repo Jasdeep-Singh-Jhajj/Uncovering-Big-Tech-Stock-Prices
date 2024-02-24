@@ -64,12 +64,12 @@ pacman::p_load(tidyverse,
 
 ```
 
-
 ```{r}
 #| label: load-dataset
 #| message: FALSE
 #| warning: FALSE
 #| echo: FALSE
+#| output: FALSE
 
 # Loading the data from tidy tuesday repository
 bigtech <- tidytuesdayR::tt_load('2023-02-07')
@@ -78,7 +78,103 @@ big_tech_companies <- bigtech$big_tech_companies
 
 ```
 
+```{r}
+#| label: graph1
+#| message: FALSE
+#| warning: FALSE
+#| echo: FALSE
+#| fig-width: 8
+#| fig-height: 4.5
+#| fig-align: center
+#| dpi: 300
 
+big_tech_companies <- big_tech_companies %>%
+  mutate(
+    CompanyName = str_replace(company, " Inc", ""),
+    CompanyName = if_else(stock_symbol == "IBM", "IBM", CompanyName),
+    CompanyName = str_replace(CompanyName, ",", ""),
+    CompanyName = str_replace(CompanyName, ".com", ""),
+    CompanyName = str_replace(CompanyName, "\\.", ""),
+    CompanyName = str_replace(CompanyName, "Corporation", ""),
+    CompanyName = str_replace(CompanyName, "Systems", ""),
+    CompanyName = str_replace(CompanyName, "Platforms", "")
+  )
+
+left_join(big_tech_stock_prices,big_tech_companies) |> 
+  ggplot(aes(x=date,y=adj_close , color = CompanyName)) + 
+  geom_line() + scale_colour_manual(name = "Company", 
+                                    values = c("orange", "grey", "grey", "grey", "grey",
+                                               "grey", "grey", "grey", "grey","brown",
+                                               "grey", "grey", "grey", "grey")) +
+  scale_x_date(breaks = seq(from = as.Date("2010-01-01"), to = as.Date("2022-01-01"),
+                            by = "2 years"), minor_breaks = "1 year", date_labels = "%Y") + scale_y_continuous(limits = c(0, 750)) +
+  annotate(
+    "text",
+    x = as.Date("2020-03-17"),
+    y = 650,
+    label = "COVID-19 \n Pandemic",
+    vjust = -0.5,  # Adjust vertical position of the label
+    color = "cornsilk4"
+  ) +
+  geom_vline(
+    xintercept = as.numeric(as.Date("2021-11-17")),
+    linetype = "dashed",
+    color = "darkgreen"
+  ) +
+  annotate(
+    "text",
+    x = as.Date("2021-11-17"),
+    y = 650,
+    label = "Lower Ad \n Revenue",
+    vjust = -0.5,  # Adjust vertical position of the label
+    color = "darkred"
+  ) +
+  geom_vline(
+    xintercept = as.numeric(as.Date("2020-03-17")),
+    linetype = "dashed",
+    color = "darkgreen"
+  ) +
+  labs(
+    x = "Year", 
+    y = "Stock Price", 
+    fill = NULL,
+    title = ""
+  ) + 
+  theme_minimal() +
+  theme(
+    legend.position = c(0.10,0.6),
+    legend.box.background = element_rect(fill = "white",
+                                         color = "white"),
+    legend.title = element_blank()
+  ) +
+  annotate(
+    "text",
+    x = as.Date("2015-05-17"),
+    y = 300,
+    label = "Highlighted companies in 2022 
+    have faced internal challenges, 
+    such as a slowdown in subscribers for Netflix
+    and pricing factors affecting Adobe",
+    vjust = -0.5,  # Adjust vertical position of the label
+    color = "darkred",
+    size = 3,
+    fontface = "italic"
+  ) +
+  annotate(
+    "text",
+    x = as.Date("2016-11-17"),
+    y = 500,
+    label = "All tech companies have seen an initial fall 
+    when COVID was declared a pandemic, 
+    but later, during the quarantine, 
+    the benefits of technology are conspicuous",
+    vjust = -0.5,  # Adjust vertical position of the label
+    color = "cornsilk4",
+    size = 3, 
+    fontface = "italic"
+  )
+
+```
 
 ### Discussion
 
@@ -105,3 +201,7 @@ big_tech_companies <- bigtech$big_tech_companies
 ## References
 
 \<\<\< Most Important ; Update as we go \>\>
+
+-   https://stackoverflow.com/questions/10576095/formatting-dates-with-scale-x-date-in-ggplot2
+-   https://viz-ggplot2.rsquaredacademy.com/ggplot2-text-annotations
+-   
