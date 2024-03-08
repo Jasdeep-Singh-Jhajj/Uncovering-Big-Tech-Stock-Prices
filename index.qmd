@@ -225,7 +225,6 @@ plot2
 
 ```
 
-
 ```{r}
 #| label: graph3
 #| message: FALSE
@@ -321,6 +320,83 @@ cowplot::plot_grid(plot3,plot4, ncol = 2)
 ### Analysis
 
 \<\<\< Team-2 to write \>\>
+
+```{r}
+
+
+big_tech_stock_prices <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv')
+big_tech_companies <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_companies.csv')
+
+
+big_tech_companies <- big_tech_companies %>%
+  mutate(
+    CompanyName = str_replace(company, " Inc", ""),
+    CompanyName = if_else(stock_symbol == "IBM", "IBM", CompanyName),
+    CompanyName = str_replace(CompanyName, ",", ""),
+    CompanyName = str_replace(CompanyName, ".com", ""),
+    CompanyName = str_replace(CompanyName, "\\.", ""),
+    CompanyName = str_replace(CompanyName, "Corporation", ""),
+    CompanyName = str_replace(CompanyName, "Systems", ""),
+    CompanyName = str_replace(CompanyName, "Platforms", ""),
+    CompanyName = str_trim(CompanyName) 
+  )
+
+ 
+gain_days <- big_tech_stock_prices |>
+  mutate(
+    year = lubridate::year(date) ,
+    quarter = lubridate::quarter(date),
+    weekday = weekdays(date),
+    gain = if_else(close - open > 0, 1, 0)
+  ) |> 
+  group_by(stock_symbol,year,quarter,weekday) |>
+  summarise(gain_count = sum(gain), .groups = "drop")
+
+
+library(dplyr)
+library(ggplot2)
+library(ggridges)
+
+weekday_order <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+
+company_colors <- c(
+  "Adobe" = "orange", 
+  "Alphabet" = "#fde725", 
+  "Amazon" = "#c2df23", 
+  "Apple" = "#86d549", 
+  "Cisco" = "#52c569",
+  "IBM" = "#2ab07f", 
+  "Intel" = "#1e9b8a", 
+  "Meta" = "#25858e", 
+  "Microsoft" = "#2d708e",
+  "Netflix" = "brown",
+  "NVIDIA" = "#38588c", 
+  "Oracle" = "#433e85", 
+  "Salesforce" = "#482173", 
+  "Tesla" = "#440154"
+)
+
+left_join(gain_days,big_tech_companies) |>
+  ggplot(aes(x = gain_count, y = factor(weekday, levels = weekday_order),
+             fill = CompanyName)) +
+  geom_density_ridges(scale = 3, rel_min_height = 0.01, alpha = 0.7) +
+  scale_fill_manual(values = company_colors) +
+  labs(title = "Distribution of Gain Days by Weekday",
+       x = "Gain Days Count",
+       y = "Stock Symbol") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        axis.line = element_line(color = "black"),
+        plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+        axis.title = element_text(size = 12, face = "bold",),
+        legend.position = "none") +
+  coord_cartesian(xlim = c(0, 12)) + facet_wrap(~ CompanyName)
+
+
+```
 
 ### Discussion
 
