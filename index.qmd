@@ -412,6 +412,7 @@ left_join(gain_days,big_tech_companies) |>
 ```
 
 ```{r q2_graph2}
+
 #| label: q2_graph2
 #| message: FALSE
 #| warning: FALSE
@@ -419,9 +420,15 @@ left_join(gain_days,big_tech_companies) |>
 #| fig-width: 8
 #| fig-align: center
 
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(gganimate)
+
 # Load data
-big_tech_stock_prices <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv")
-big_tech_companies <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_companies.csv")
+big_tech_stock_prices <- read.csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv")
+big_tech_companies <- read.csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_companies.csv")
 
 big_tech_companies <- big_tech_companies |>
   mutate(
@@ -439,25 +446,33 @@ big_tech_companies <- big_tech_companies |>
 # Merge data
 merged_data <- inner_join(big_tech_stock_prices, big_tech_companies, by = "stock_symbol")
 
-# Group data by year and company and calculate ranking
+# Group data by year and company and calculate cumulative sum of ClosingPrice
 grouped_data <- merged_data |>
   group_by(year = year(date), CompanyName) |>
   summarize(ClosingPrice = mean(close)) |>
-  ungroup() |>
   group_by(year) |>
-  mutate(Rank = rank(ClosingPrice))# |>
+  mutate(CumulativeClosingPrice = cumsum(ClosingPrice)) |>
+  mutate(Rank = rank(CumulativeClosingPrice)) |>
+  mutate(RoundedCumulativeClosingPrice = round(CumulativeClosingPrice, 0)) |>
+  ungroup()
 
-clr <- c("#A2AAAD", "#FF0000", "#FF9900", "#1798c1", "#00BCEB", "#34A853", "#0530AD", 
+# Order the companies based on cumulative ClosingPrice within each year
+grouped_data <- grouped_data |>
+  arrange(desc(CumulativeClosingPrice)) |>
+  mutate(CompanyName = factor(CompanyName, levels = unique(CompanyName)))
+
+bar_color <- c("#A2AAAD", "#FF0000", "#FF9900", "#1798c1", "#00BCEB", "#34A853", "#0530AD", 
          "#0068B5", "#0668E1", "#F14F21", "#E50914", "#76B900", "#C74634", "#E31937")
 
 # Plot
+# Plot
 animated_plot <- ggplot(grouped_data) +
-  geom_col(aes(x = ClosingPrice,
-               y = fct_reorder(CompanyName, Rank),
+  geom_col(aes(x = CumulativeClosingPrice,
+               y = fct_reorder(CompanyName, CumulativeClosingPrice),
                fill = CompanyName),
            width = 0.9) +
-  geom_text(aes(x = ClosingPrice, y = CompanyName, label = CompanyName),
-            hjust = 1.25) +
+  geom_text(aes(x = RoundedCumulativeClosingPrice, y = CompanyName, label = RoundedCumulativeClosingPrice ),
+            hjust = -0.02, vjust = 0.5) +
   theme_minimal() +
   theme(axis.text.y = element_text(size = 10),
         axis.ticks.y = element_blank(),
@@ -465,20 +480,25 @@ animated_plot <- ggplot(grouped_data) +
         legend.position = "none",
         panel.grid.major=element_blank(),
         panel.grid.minor=element_blank(),
-        panel.grid.major.x = element_line( size=.01, color="grey" )) + 
-  scale_x_continuous(breaks = seq(0, 600, by = 100)) +
-  ggtitle('Yearwise Closing Price of Tech Comapnies: {closest_state}') +
-  scale_fill_manual(values = clr) +
+        panel.grid.major.x = element_line( size=.01, color="grey" )) +
+  labs(
+    x = "Cumulative Closing Price",
+    y = NULL
+  ) +
+  scale_x_continuous(breaks = seq(0, 4000,by = 500)) +
+  scale_x_continuous(limits = c(0, 4000)) +
+  ggtitle('Yearwise Closing Price of Big Tech Companies: {closest_state}') +
+  scale_fill_manual(values = bar_color) +
   transition_states(year,
                     transition_length = 1,
-                    state_length = 1) +
-  exit_fly(x_loc = 0, y_loc = 0) +
-  enter_fly(x_loc = 0, y_loc = 0)
+                    state_length = 10)
 
 # View the animated plot
 animated_plot
 
 ```
+
+
 ### Discussion
 
 \<\<\< Team-2 to write \>\>
