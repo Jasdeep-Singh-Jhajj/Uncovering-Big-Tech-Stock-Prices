@@ -3,7 +3,8 @@ title: "Big Tech Stock Prices"
 subtitle: "INFO 526 - Spring 2024 - Project 1"
 author: "Team Crimson: Arun, Jasdeep, Mohit, Pradnya, Varun"
 title-slide-attributes:
-  data-background-image: images/watercolour_sys02_img34_teacup-ocean.jpg
+  data-background-image: images/stock-exchange-642896_1280.jpg
+  #watercolour_sys02_img34_teacup-ocean.jpg
   data-background-size: stretch
   data-background-opacity: "0.7"
   data-slide-number: none
