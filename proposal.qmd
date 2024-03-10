@@ -79,7 +79,7 @@ big_tech_stock_prices |>
 [*Variable description*]{.underline}
 
 | variable       | class     | description                                                                                                                                                                                                                       |
-|----------|----------|-----------------------------------------------------|
+|-------------|-------------|----------------------------------------------|
 | `stock_symbol` | character | stock_symbol                                                                                                                                                                                                                      |
 | `date`         | double    | date                                                                                                                                                                                                                              |
 | `open`         | double    | The price at market open.                                                                                                                                                                                                         |
@@ -135,7 +135,7 @@ In essence, our engagement with this dataset transcends mere technical considera
 The two questions to be answered are:
 
 1.  Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?
-2.  What are the patterns in number of gain days on stock prices?
+2.  What patterns do we see in the number of days where stock prices show gains?
 
 ## Analysis plan
 
