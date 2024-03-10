@@ -430,6 +430,7 @@ library(gganimate)
 big_tech_stock_prices <- read.csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv")
 big_tech_companies <- read.csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_companies.csv")
 
+# Data preprocessing
 big_tech_companies <- big_tech_companies |>
   mutate(
     CompanyName = str_replace(company, " Inc", ""),
@@ -446,32 +447,118 @@ big_tech_companies <- big_tech_companies |>
 # Merge data
 merged_data <- inner_join(big_tech_stock_prices, big_tech_companies, by = "stock_symbol")
 
-# Group data by year and company and calculate cumulative sum of ClosingPrice
+# Function to compute gain days
+compute_gain_days <- function(x) {
+  gain_days <- sum(x[-1] > x[-length(x)])
+  return(gain_days)
+}
+
+# Group data by year and company, calculate gain days
 grouped_data <- merged_data |>
   group_by(year = year(date), CompanyName) |>
-  summarize(ClosingPrice = mean(close)) |>
-  group_by(year) |>
-  mutate(CumulativeClosingPrice = cumsum(ClosingPrice)) |>
-  mutate(Rank = rank(CumulativeClosingPrice)) |>
-  mutate(RoundedCumulativeClosingPrice = round(CumulativeClosingPrice, 0)) |>
+  summarize(GainDays = compute_gain_days(close)) |>
   ungroup()
 
-# Order the companies based on cumulative ClosingPrice within each year
+# Order the companies based on total gain days within each year
 grouped_data <- grouped_data |>
-  arrange(desc(CumulativeClosingPrice)) |>
-  mutate(CompanyName = factor(CompanyName, levels = unique(CompanyName)))
+  group_by(year) |>
+  mutate(CumulativeGainDays = cumsum(GainDays)) |>
+  mutate(Rank = rank(-CumulativeGainDays)) |>
+  arrange(year, Rank) |>
+  ungroup()
 
+# Plot
 bar_color <- c("#A2AAAD", "#FF0000", "#FF9900", "#1798c1", "#00BCEB", "#34A853", "#0530AD", 
-         "#0068B5", "#0668E1", "#F14F21", "#E50914", "#76B900", "#C74634", "#E31937")
+               "#0068B5", "#0668E1", "#F14F21", "#E50914", "#76B900", "#C74634", "#E31937")
 
-# Plot
-# Plot
 animated_plot <- ggplot(grouped_data) +
-  geom_col(aes(x = CumulativeClosingPrice,
-               y = fct_reorder(CompanyName, CumulativeClosingPrice),
+  geom_col(aes(x = CumulativeGainDays,
+               y = fct_reorder(CompanyName, CumulativeGainDays),
                fill = CompanyName),
            width = 0.9) +
-  geom_text(aes(x = RoundedCumulativeClosingPrice, y = CompanyName, label = RoundedCumulativeClosingPrice ),
+  geom_text(aes(x = CumulativeGainDays, y = CompanyName, label = CumulativeGainDays),
+            hjust = -0.02, vjust = 0.5) +
+  theme_minimal() +
+  theme(axis.text.y = element_text(size = 10),
+        axis.ticks.y = element_blank(),
+        plot.margin = unit(c(1, 4, 3, 1), 'lines'),
+        legend.position = "none",
+        panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank(),
+        panel.grid.major.x = element_line( size=.01, color="grey" )) +
+  labs(
+    x = "Cumulative Gain Days",
+    y = NULL
+  ) +
+  scale_x_continuous(breaks = seq(0,2500, by = 500), limits = c(0, 2500)) +
+  ggtitle('Cumulative Gain Days of Big Tech Companies: {closest_state}') +
+  scale_fill_manual(values = bar_color) +
+  transition_states(year,
+                    transition_length = 1,
+                    state_length = 10)
+
+# View the animated plot
+animated_plot
+
+
+```
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(gganimate)
+
+# Load data
+big_tech_stock_prices <- read.csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv")
+big_tech_companies <- read.csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_companies.csv")
+
+# Data preprocessing
+big_tech_companies <- big_tech_companies |>
+  mutate(
+    CompanyName = str_replace(company, " Inc", ""),
+    CompanyName = if_else(stock_symbol == "IBM", "IBM", CompanyName),
+    CompanyName = str_replace(CompanyName, ",", ""),
+    CompanyName = str_replace(CompanyName, ".com", ""),
+    CompanyName = str_replace(CompanyName, "\\.", ""),
+    CompanyName = str_replace(CompanyName, "Corporation", ""),
+    CompanyName = str_replace(CompanyName, "Systems", ""),
+    CompanyName = str_replace(CompanyName, "Platforms", ""),
+    CompanyName = str_trim(CompanyName) 
+  )
+
+# Merge data
+merged_data <- inner_join(big_tech_stock_prices, big_tech_companies, by = "stock_symbol")
+
+# Function to compute gain days
+compute_gain_days <- function(x) {
+  gain_days <- sum(x[-1] > x[-length(x)])
+  return(gain_days)
+}
+
+# Group data by year and company, calculate gain days
+grouped_data <- merged_data |>
+  group_by(year = year(date), CompanyName) |>
+  summarize(GainDays = compute_gain_days(close)) |>
+  ungroup()
+
+# Order the companies based on total gain days within each year
+grouped_data <- grouped_data |>
+  group_by(year) |>
+  mutate(Rank = rank(-GainDays)) |>
+  arrange(year, Rank) |>
+  ungroup()
+
+# Plot
+bar_color <- c("#A2AAAD", "#FF0000", "#FF9900", "#1798c1", "#00BCEB", "#34A853", "#0530AD", 
+               "#0068B5", "#0668E1", "#F14F21", "#E50914", "#76B900", "#C74634", "#E31937")
+
+animated_plot <- ggplot(grouped_data) +
+  geom_col(aes(x = GainDays,
+               y = fct_reorder(CompanyName, GainDays),
+               fill = CompanyName),
+           width = 0.9) +
+  geom_text(aes(x = GainDays, y = CompanyName, label = GainDays),
             hjust = -0.02, vjust = 0.5) +
   theme_minimal() +
   theme(axis.text.y = element_text(size = 10),
@@ -482,12 +569,11 @@ animated_plot <- ggplot(grouped_data) +
         panel.grid.minor=element_blank(),
         panel.grid.major.x = element_line( size=.01, color="grey" )) +
   labs(
-    x = "Cumulative Closing Price",
+    x = "Gain Days",
     y = NULL
   ) +
-  scale_x_continuous(breaks = seq(0, 4000,by = 500)) +
-  scale_x_continuous(limits = c(0, 4000)) +
-  ggtitle('Yearwise Closing Price of Big Tech Companies: {closest_state}') +
+  scale_x_continuous(breaks = seq(0, max(grouped_data$GainDays), by = 50)) +
+  ggtitle('Yearwise Gain Days of Big Tech Companies: {closest_state}') +
   scale_fill_manual(values = bar_color) +
   transition_states(year,
                     transition_length = 1,
