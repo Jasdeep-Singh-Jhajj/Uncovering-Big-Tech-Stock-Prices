@@ -165,7 +165,8 @@ plot1 <-  left_join(big_tech_stock_prices,big_tech_companies) |>
             x = "Year", 
             y = "Stock Price", 
             fill = NULL,
-            title = ""
+            title = "Stock Price Trends",
+            subtitle = "2010-2022"
           ) + 
           theme_minimal() +
           theme(
@@ -254,7 +255,7 @@ plot2
 #| message: FALSE
 #| warning: FALSE
 #| echo: FALSE
-#| fig-width: 8
+#| fig-width: 9
 #| fig-align: center
 #| dpi: 300
 
@@ -290,6 +291,8 @@ plot3 <-
                                  "brown","#38588c", "#433e85", 
                                  "#482173", "#440154")) + 
   geom_bar(stat = "identity") + 
+  geom_text(aes(label = sprintf("%.2f%%", Two_Years), y = 48),
+              color = "brown4", size = 3, fontface = "bold") +
   coord_flip() + 
   labs(
     x = "Two Year Returns",
@@ -311,6 +314,8 @@ plot4 <-
                                "brown","#38588c", "#433e85", 
                                "#482173", "#440154")) + 
   geom_bar(stat = "identity") + 
+  geom_text(aes(label = sprintf("%.2f%%", Five_Years), y = 98),
+              color = "brown4", size = 3, fontface = "bold") +
   coord_flip() + 
   labs(
     x = "Five Year Returns",
@@ -319,7 +324,7 @@ plot4 <-
     subtitle = "2018 to 2023"
   ) +
   theme_minimal() + 
-  guides(fill = "none") 
+  guides(fill = "none")
 
 
 cowplot::plot_grid(plot3,plot4, ncol = 2)
@@ -328,15 +333,26 @@ cowplot::plot_grid(plot3,plot4, ncol = 2)
 
 ### Discussion
 
-\<\<\< Team-1 to write \>\>
+**Plot1**:
 
-For plot1, most of the companies showed a drop in stock prices in H1 2020 at the start of Covid-19 then recovered back with another drop in year 2022. Netflix and Adobe showed substantial drop in stock prices during the year 2022. The fall in stock prices in year 2022 was mainly due to after Covid-19 effect like slowdown in sales, recession fears, increase in unemployment rate etc.
+- Most companies experienced a decline in stock prices in H1 2020 due to initial pandemic fears. However, these prices rebounded and increased sharply as technology adoption and importance increased.
+- After 2022, a general decline affected most companies, but notably, Netflix and Adobe experienced more pronounced decreases compared to the overall market trend. This decline was attributed to post-Covid-19 effects, such as a slowdown in sales, recession fears, and an increase in unemployment rates.
 
-Plot2 shows detrended stock price fluctuations over the period of 5 years (2018 -2022), most of the stocks are showing significant deviations in trendline 2020 onwards
+**Plot2**:
 
-In Plot3, comparison can be made between average returns over 2 years and 5 year among different stocks. Microsoft had highest returns over 2 years 46.46% which dropped to 39.55% over 5 years where as Tesla had highest 5 year returns of 94.02% ( 17.12% for 2 years)
+- Plot2 depicts detrended stock price fluctuations spanning a 5-year period (2018-2022). The area above the blue line indicates higher returns during that period. Notably, most companies, excluding the relatively flatter trends of IBM and Cisco, appear to have modest returns, with significant deviations becoming more apparent, particularly from 2020 onwards.
+- Among the companies unaffected by the trend reversal in 2022 are Apple, Netflix, Microsoft, and IBM. Upon closer examination, it becomes evident that Apple, Netflix, and Microsoft stand out as long-term gainers.
 
-Adobe had highest negative impact from 44% (2 years) to 17 % (5 years) whereas Tesla had highest positive impact from 17% ( 2 years)to 94% (5 years)
+**Plot3**:
+
+- Plot3 allows for a comparison of average returns over 2 years and 5 years for various stocks.
+- Microsoft recorded the highest returns over 2 years at 46.46%, which decreased to 39.55% over 5 years. In contrast, Tesla showed the highest 5-year returns of 94.02% (compared to 17.12% over 2 years).
+- Adobe and Netflix experienced the most significant negative impact, with returns dropping from 44% and 32% over 2 years to 17% and 9% over 5 years, respectively.
+- Conversely, Tesla had the most substantial positive impact, with returns increasing from 17% over 2 years to an impressive 94% over 5 years.
+
+**Conclusion**:
+
+Throughout the analysis, the impact of the pandemic on stock prices reveals distinctive winners and losers. Netflix and Adobe notably suffered substantial declines in 2022 due to post-Covid-19 effects, including a sales slowdown, recession fears, internal factors and rising unemployment rates. Conversely, Apple, Microsoft, and IBM demonstrated resilience, remaining relatively unaffected by the trend reversal in 2022. A closer look at long-term trends positions Apple, Telsa, and Microsoft as standout gainers, while Tesla emerges as a clear winner with the highest 5-year returns, surging from 17% to an impressive 94%. This comprehensive overview highlights the varying degrees of impact and success among the analyzed companies during this period.
 
 ## Question 2 : What patterns do we see in the positive gain days over the given period?
 
@@ -393,6 +409,9 @@ grouped_data <- grouped_data |>
   mutate(Rank = rank(-GainDays)) |>
   arrange(year, Rank) |>
   ungroup()
+
+grouped_data <- grouped_data |>
+  filter(year != 2023)
 
 # Plot
 bar_color <- c("orange", "#fde725", "#c2df23", "#86d549", "#52c569", "#2ab07f", "#1e9b8a", 
@@ -493,7 +512,23 @@ left_join(gain_days,big_tech_companies) |>
 
 ### Discussion
 
-\<\<\< Team-2 to write \>\>
+**Plot1**:
+
+- Most companies share a consistent number of positive gain days, averaging around 130 each year.
+- An exception is 2022, where the number drops to 115 positive gain days.
+- Suggests a substantial market impact on all companies, as seen in previous analyses.
+- However, as the positive gain days are nearly the same across companies, it's challenging to draw direct conclusions about the specific slots for traders' decision-making from this plot.
+
+**Plot2**:
+
+- Clear distribution of positive gain days across weekdays for all companies.
+- Example: Adobe presents opportunities to buy on Monday and sell on Thursday.
+- Intel generally has higher positive gain days, except on Tuesday. 
+- Highlights the distinct buying and selling strategies for each company.
+
+**Conclusion**:
+
+In our earlier analysis, we identified companies with higher returns. Now, considering different positive gain days across weekdays, short-term investors can strategically align with historical performance. For instance, Tesla, with higher returns, may be a target for buying on Monday and Tuesday, selling on Tuesday. In contrast, IBM, with lower returns, could be bought on Thursday and sold on Wednesday. This approach optimizes trading strategies by incorporating both return patterns and positive gain day distributions. Empowering traders with these insights, along with considering the potential volatility, these graphs serve as valuable tools for day and weekly trading strategies, facilitating quick gains in the dynamic stock market landscape.
 
 ## References
 
