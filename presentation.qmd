@@ -54,17 +54,19 @@ data("penguins")
 # Exploring the daily stock prices and trading volumes of top tech companies
 
 ## Dataset
-::: {.incremental}
+
+::: incremental
 -   Daily stock prices of 14 tech giants like Apple, Amazon, and Google.
 -   Includes opening, closing, high, and low prices for each company.
 -   Data spans several years, allowing for in-depth analysis and trends.
 -   Valuable resource for investors, analysts, and researchers in the tech sector.
 :::
+
 ## Data Analysis Opportunities
 
 ::: columns
 ::: {.column width="50%"}
-::: {.incremental}
+::: incremental
 Benefits of Analysis
 
 -   Insights gained into market trends and performance
@@ -74,7 +76,7 @@ Benefits of Analysis
 :::
 
 ::: {.column width="50%"}
-::: {.incremental}
+::: incremental
 Challenges of Analysis
 
 -   Large datasets requires a significant time investment
@@ -87,7 +89,8 @@ Challenges of Analysis
 ## Decade-Long Data Trends
 
 ### Crisis to Pandemic
-::: {.incremental}
+
+::: incremental
 -   Analyzing economic shifts post-financial crisis
 -   Identifying patterns leading to market volatility
 -   Impact of COVID-19 on global financial markets
@@ -96,7 +99,32 @@ Challenges of Analysis
 
 ## Question 1: Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?
 
--   Some content
+First Plot
+
+::: incremental
+-   Drop in stock prices in H1 2020 due to Covid-19 pandemic
+-   Adobe , Netflix showed significant drop in stock prices during 2020-2023
+-   Tesla showed highest increase during 2020-2023
+-   Tesla stock prices increase in due to EV sales- release of new models/ Green Subsidy Push
+-   Reasons for stock price drop in 2022 - slowdown in sales, recession fears, increase in unemployment rate etc.
+:::
+
+Second plot ( Detrended plots )-
+
+::: incremental
+-   Most of the stocks show stock price ratio deviations in last 3 years 2020-2022
+-   Telsa shows above normal growth during period 2020-2022
+-   Adobe/Netflix shows increase initially but then fall below line during 2020-2022
+:::
+
+Third plot (Average Stock Price Returns Per Year) for period (2018-2019) and (2018-2022)
+
+::: incremental
+-   Microsoft had highest returns over 2 years 46.46% (39.55% over 5 years)
+-   Tesla had highest 5 year returns of 94.02% ( 17.12% for 2 years)
+-   Adobe - highest negative impact from 44% (2 years) to 17 % (5 years)
+-   Tesla - highest positive impact from 17% ( 2 years)to 94% (5 years)
+:::
 
 ## Question 2: What patterns do we see in the positive gain days over the given period?
 
@@ -180,6 +208,6 @@ Limitations:
 
 ## Feeling adventurous?(Extra slide- needs to be removed)
 
--   You are welcomed to use the default styling of the slides. In fact, that\'s what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
+-   You are welcomed to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
 
 -   But some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs.
