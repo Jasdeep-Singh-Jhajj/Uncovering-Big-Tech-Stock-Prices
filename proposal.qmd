@@ -135,7 +135,7 @@ In essence, our engagement with this dataset transcends mere technical considera
 The two questions to be answered are:
 
 1.  Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?
-2.  What patterns do we see in the number of days where stock prices show gains?
+2.  What patterns do we see in the positive gain days over the given period?
 
 ## Analysis plan
 
