@@ -3,16 +3,16 @@ title: "Big Tech Stock Prices"
 subtitle: "INFO 526 - Spring 2024 - Project 1"
 author: "Team Crimson: Arun, Jasdeep, Mohit, Pradnya, Varun"
 title-slide-attributes:
-  data-background-image: images/background.gif
+  data-background-image: images/background_presentation1.gif
   data-background-size: stretch
   data-background-opacity: "0.8"
   data-slide-number: none
 format:
   revealjs:
-    theme:  ['data/customtheming.scss']
+    theme:  [simple,data/customtheming.scss]
     transition: slide
     background-transition: fade
-    logo: images\stock_logo.png
+    logo: images/stock_logo.png
     footer: "[💲 The Crimson](https://info-526-s24.github.io/project-01-Crimson/)"
     scrollable: true
 
@@ -45,7 +45,6 @@ pacman::p_load(tidyverse,
                gifski,
                here,
                magick)
-
 ```
 
 ```{r ggplot_setup, message=FALSE, include=FALSE}
@@ -61,33 +60,36 @@ knitr::opts_chunk$set(
   fig.asp = 0.618,      # the golden ratio
   fig.retina = 1,       # dpi multiplier for displaying HTML output on retina
   fig.align = "center", # center align figures
-  dpi = 140             # higher dpi, sharper image
+  dpi = 300             # higher dpi, sharper image
 )
 ```
 
+# The Rise and Fall: Historical Patterns in Big Tech Stock Prices
 
+## Data Description {.smaller auto-animate="true"}
 
-## Stock prices Datase for Big Tech companies {.smaller auto-animate="true"}
 ::: incremental
--   "Big Tech Stock Price" & "Big Tech Companies" datasets from [tidytuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-02-07).
--   Includes opening, closing, high, and low prices for company.
--   Data spans several years, allowing for in-depth analysis and trends.
+-   `Big Tech Stock Price` & `Big Tech Companies` datasets from [tidytuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-02-07).
+-   Includes `open`, `close`, `high`, `low` and `adj_close` prices for company.
+-   Data spans from 2010 to 2022, allowing for in-depth analysis and trends.
 -   Our Data:
     -   `Tech_companies` dataset
     -   `Tech_stock_prices` dataset
 :::
 
-## Aim {auto-animate="true"}
+## Objective {auto-animate="true"}
 
 ::: columns
 ::: {.column width="70%"}
--   performance of 14 major tech firms over the past decade
--   trends and patterns focusing on COVID-19 pandemic
--   informed decision-making
+::: {style="font-size: 75%;"}
+-   Delving into the performance of 14 leading tech companies, with a focus on understanding the influence of COVID-19.
+-   Question 1: Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?
+-   Question 2: What patterns do we see in the positive gain days over the given period?
+:::
 :::
 
 ::: {.column width="30%"}
-![](images/first_slide.gif){fig-align="right" height="450" width="450"}
+![](images/slide1.png){fig-align="right" height="450" width="450"}
 :::
 :::
 
@@ -95,21 +97,54 @@ knitr::opts_chunk$set(
 
 **Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?**
 
-### For First Plot
-
 ::: incremental
--   Drop in stock prices in H1 2020 due to Covid-19 pandemic
+::: columns
+::: {.column width="30%"}
+### Plot1
 
--   Adobe , Netflix showed significant drop in stock prices during 2020-2023
+::: {style="font-size: 70%;"}
+-   Depicts trends for all 14 companies using `geom_line`
 
--   Tesla showed highest increase during 2020-2023
+-   Annotates with the COVID-19 period.
 
--   Tesla stock prices increase in due to EV sales- release of new models/ Green Subsidy Push
+-   Highlights notable trends of Adobe and Netflix with distinct line colors.
 
--   Reasons for stock price drop in 2022 - slowdown in sales, recession fears, increase in unemployment rate etc.
+-   Includes comments for better understanding.
+:::
 :::
 
-## Plot 1
+::: {.column width="30%"}
+### Plot2
+
+::: {style="font-size: 70%;"}
+-   Zooms into the period from 2018 to 2022.
+
+-   Utilizes de-trending days plot based on 14 `linear models`.
+
+-   Ratios calculated for insights on a standardized scale and plotted using `geom_line`
+
+-   Facets maintain color patterns from the first plot.
+:::
+:::
+
+::: {.column width="30%"}
+### Plot3
+
+::: {style="font-size: 70%;"}
+-   Focuses on starting date (2018), 2020, and closing date (2022).
+
+-   Extracts two-year and five-year returns for all companies and calculates average returns for all companies
+
+-   `Bar plot` for descending two-year returns and five-year returns are plotted and then combined using `cowplot`
+:::
+:::
+:::
+:::
+
+## Impact of Stock Prices around COVID-19
+
+::: panel-tabset
+### Plot1 {.smaller}
 
 ```{r world_data, message=FALSE, include=FALSE}
 # Loading the data from tidy tuesday repository
@@ -134,6 +169,8 @@ big_tech_companies <- big_tech_companies |>
 ```
 
 ```{r Plot-1, message=FALSE, echo=FALSE}
+#| fig.asp: 0.5
+
 plot1 <-  left_join(big_tech_stock_prices,big_tech_companies) |> 
           ggplot(aes(x=date,y=adj_close , color = CompanyName)) + 
           geom_line() + scale_colour_manual(name = "Company", 
@@ -149,10 +186,11 @@ plot1 <-  left_join(big_tech_stock_prices,big_tech_companies) |>
           annotate(
             "text",
             x = as.Date("2020-03-17"),
-            y = 680,
+            y = 620,
             label = "COVID-19 \n Pandemic",
             vjust = -0.5,  # Adjust vertical position of the label
-            color = "cornsilk4"
+            color = "cornsilk4",
+            size = 3
           ) +
           geom_vline(
             xintercept = as.numeric(as.Date("2021-11-17")),
@@ -162,10 +200,11 @@ plot1 <-  left_join(big_tech_stock_prices,big_tech_companies) |>
           annotate(
             "text",
             x = as.Date("2021-11-17"),
-            y = 680,
+            y = 620,
             label = "Lower Ad \n Revenue",
             vjust = -0.5,  # Adjust vertical position of the label
-            color = "darkred"
+            color = "darkred",
+            size = 3
           ) +
           geom_vline(
             xintercept = as.numeric(as.Date("2020-03-17")),
@@ -216,17 +255,12 @@ plot1
 
 ```
 
-## Second plot ( Detrended plots ) {.smaller}
-
-::: incremental
--   Most of the stocks show stock price ratio deviations in last 3 years 2020-2022
--   Telsa shows above normal growth during period 2020-2022
--   Adobe/Netflix shows increase initially but then fall below line during 2020-2022
-:::
-
-## Plot 2
+### Plot2 {.smaller}
 
 ```{r Plot-2, message=FALSE, echo=FALSE}
+#| fig.asp: 0.5
+
+
 models <- big_tech_stock_prices |>
   group_by(stock_symbol) |>
   group_modify(~ augment(lm(adj_close ~ date, data = .))) |>
@@ -261,19 +295,11 @@ plot2 <-
 plot2
 ```
 
-
-## Third plot (Average Stock Price Returns Per Year) for period (2018-2019) and (2018-2022) {.smaller}
-
-::: incremental
--   Microsoft had highest returns over 2 years 46.46% (39.55% over 5 years)
--   Tesla had highest 5 year returns of 94.02% ( 17.12% for 2 years)
--   Adobe - highest negative impact from 44% (2 years) to 17 % (5 years)
--   Tesla - highest positive impact from 17% ( 2 years)to 94% (5 years)
-:::
-
-## Plot 3
+### Plot3 {.smaller}
 
 ```{r Plot-3, message=FALSE, echo=FALSE}
+#| fig.asp: 0.5
+
 dates = big_tech_stock_prices |> 
   group_by(year(date)) |> 
   summarize(min_date = min(date), max_date = max(date))
@@ -306,6 +332,8 @@ plot3 <-
                                  "brown","#38588c", "#433e85", 
                                  "#482173", "#440154")) + 
   geom_bar(stat = "identity") + 
+  geom_text(aes(label = sprintf("%.2f%%", Two_Years), y = 48),
+              color = "brown4", size = 3, fontface = "bold") +
   coord_flip() + 
   labs(
     x = "Two Year Returns",
@@ -327,6 +355,8 @@ plot4 <-
                                "brown","#38588c", "#433e85", 
                                "#482173", "#440154")) + 
   geom_bar(stat = "identity") + 
+  geom_text(aes(label = sprintf("%.2f%%", Five_Years), y = 98),
+              color = "brown4", size = 3, fontface = "bold") +
   coord_flip() + 
   labs(
     x = "Five Year Returns",
@@ -335,28 +365,73 @@ plot4 <-
     subtitle = "2018 to 2023"
   ) +
   theme_minimal() + 
-  guides(fill = "none") 
+  guides(fill = "none")
 
 
 cowplot::plot_grid(plot3,plot4, ncol = 2)
 
 ```
+:::
 
+## Discussion
 
-## Question 2:{.smaller}
+::: {style="font-size: 75%;"}
+
+-   Pandemic Impact on Winners and Losers (2022):
+    -   Netflix and Adobe experienced significant declines.
+    -   Factors: post-Covid-19 effects, sales slowdown, recession fears, internal issues, rising unemployment. Apple, Microsoft, and IBM showed resilience in 2022.
+-   Long-Term Trends (Overall):
+    -   Apple, Tesla, and Microsoft emerged as standout gainers.
+    -   Tesla recorded the highest 5-year returns, surging from 17% to an impressive 94%.
+
+:::
+
+## Question 2: {.smaller}
 
 **What patterns do we see in the positive gain days over the given period?**
 
-### First Plot: 
-
 ::: incremental
 
--   The analysis of gain days across different companies reveals a consistent number of positive gain days, averaging around 130 each year.
--   However, there is an exception in 2022, where the number drops to 115 positive gain days, indicating a substantial market impact on all companies.
--   While positive gain days are nearly the same across companies, making it challenging to draw direct conclusions, this data provides insights into overall market trends and fluctuations over the analyzed period.
+::: columns
+
+::: {.column width="50%"}
+
+### Plot1:
+
+::: {style="font-size: 75%;"}
+
+-   Illustrate overall `gain-days` of all companies from 2010 to 2022 on a yearly basis.
+-   Animated series of 12 `column` charts representing different companies.
+-   Dynamic presentation reveals peaks and troughs of gain days across these years and utilizes `geom_text` to annotate the number of gain days for swift comprehension.
+
 :::
 
-## Plot -1
+:::
+
+::: {.column width="50%"}
+
+### Plot2:
+
+::: {style="font-size: 75%;"}
+
+-   Provide a deeper understanding of trading dynamics based on gain-days.
+-   Gain-days grouped by quarter and weekday and averages of approximately 12 weekdays per quarter for consistency.
+-   `Ridge density` plots visually articulate the spread and peaks of gains across weekdays.
+-   Facilitates identification of specific days more favorable for trading in the context of individual tech companies.
+
+:::
+
+:::
+
+:::
+
+:::
+
+## +Ve Gain Days Trading Strategies {.smaller}
+
+::: panel-tabset
+
+### Plot1
 ```{r animated, message=FALSE}
 #| code-fold: true
 #| code-summary: "Animation of the plots"
@@ -380,6 +455,9 @@ grouped_data <- grouped_data |>
   mutate(Rank = rank(-GainDays)) |>
   arrange(year, Rank) |>
   ungroup()
+
+grouped_data <- grouped_data |>
+  filter(year != 2023)
 
 # Plot
 bar_color <- c("orange", "#fde725", "#c2df23", "#86d549", "#52c569", "#2ab07f", "#1e9b8a", 
@@ -413,10 +491,13 @@ animated_plot <- ggplot(grouped_data) +
 ```
 
 ```{r amintation2, message=FALSE}
-anim_save("animated_plot.gif", animated_plot,renderer = gifski_renderer())
+#| fig.asp: 0.5
+
+
+anim_save("data/animated_plot.gif", animated_plot,renderer = gifski_renderer())
 
 # Load the animated GIF
-plot_animation <- image_read("animated_plot.gif")
+plot_animation <- image_read("data/animated_plot.gif")
 
 # Display the animation
 plot_animation |>
@@ -424,16 +505,13 @@ plot_animation |>
 
 ```
 
-## Second Plot:{.smaller auto-animate="true"}
-
-::: incremental
--   Clear distributions of positive gain days across weekdays for all companies are observed.
-For example, Adobe presents opportunities to buy on Monday and sell on Thursday, while    -   Intel generally has higher positive gain days except on Tuesday.
--   These distinct buying and selling strategies for each company highlight the importance of considering weekday patterns in trading decisions, providing valuable insights for short-term investors.
-:::
-## Plot 2
+### Plot2
 
 ```{r Plot-2 gains, message=FALSE, echo=FALSE}
+#| fig.height: 6
+#| fig.width: 10
+#| fig.asp: 0.5
+
  # Calculate gain days
 gain_days <- big_tech_stock_prices |>
   mutate(
@@ -485,5 +563,22 @@ left_join(gain_days,big_tech_companies) |>
         legend.position = "none") +
   coord_cartesian(xlim = c(0, 12)) + facet_wrap(~ CompanyName)
 ```
+
+:::
+
+## Discussion
+
+::: {style="font-size: 75%;"}
+
+-   Leveraging Positive Gain Days:
+    -   Examining positive gain days across weekdays.
+    -   Short-term investors can strategically align with historical performance.
+-   Optimizing Trading Strategies:
+    -   Incorporates return patterns and positive gain day distributions.
+    -   Empowers traders with insights for effective day and weekly strategies.
+    -   Graphs serve as valuable tools in the dynamic stock market landscape.
+
+:::
+
 
 # THANK YOU

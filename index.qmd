@@ -335,20 +335,20 @@ cowplot::plot_grid(plot3,plot4, ncol = 2)
 
 **Plot1**:
 
-- Most companies experienced a decline in stock prices in H1 2020 due to initial pandemic fears. However, these prices rebounded and increased sharply as technology adoption and importance increased.
-- After 2022, a general decline affected most companies, but notably, Netflix and Adobe experienced more pronounced decreases compared to the overall market trend. This decline was attributed to post-Covid-19 effects, such as a slowdown in sales, recession fears, and an increase in unemployment rates.
+-   Most companies experienced a decline in stock prices in H1 2020 due to initial pandemic fears. However, these prices rebounded and increased sharply as technology adoption and importance increased.
+-   After 2022, a general decline affected most companies, but notably, Netflix and Adobe experienced more pronounced decreases compared to the overall market trend. This decline was attributed to post-Covid-19 effects, such as a slowdown in sales, recession fears, and an increase in unemployment rates.
 
 **Plot2**:
 
-- Plot2 depicts detrended stock price fluctuations spanning a 5-year period (2018-2022). The area above the blue line indicates higher returns during that period. Notably, most companies, excluding the relatively flatter trends of IBM and Cisco, appear to have modest returns, with significant deviations becoming more apparent, particularly from 2020 onwards.
-- Among the companies unaffected by the trend reversal in 2022 are Apple, Netflix, Microsoft, and IBM. Upon closer examination, it becomes evident that Apple, Netflix, and Microsoft stand out as long-term gainers.
+-   Plot2 depicts detrended stock price fluctuations spanning a 5-year period (2018-2022). The area above the blue line indicates higher returns during that period. Notably, most companies, excluding the relatively flatter trends of IBM and Cisco, appear to have modest returns, with significant deviations becoming more apparent, particularly from 2020 onwards.
+-   Among the companies unaffected by the trend reversal in 2022 are Apple, Netflix, Microsoft, and IBM. Upon closer examination, it becomes evident that Apple, Netflix, and Microsoft stand out as long-term gainers.
 
 **Plot3**:
 
-- Plot3 allows for a comparison of average returns over 2 years and 5 years for various stocks.
-- Microsoft recorded the highest returns over 2 years at 46.46%, which decreased to 39.55% over 5 years. In contrast, Tesla showed the highest 5-year returns of 94.02% (compared to 17.12% over 2 years).
-- Adobe and Netflix experienced the most significant negative impact, with returns dropping from 44% and 32% over 2 years to 17% and 9% over 5 years, respectively.
-- Conversely, Tesla had the most substantial positive impact, with returns increasing from 17% over 2 years to an impressive 94% over 5 years.
+-   Plot3 allows for a comparison of average returns over 2 years and 5 years for various stocks.
+-   Microsoft recorded the highest returns over 2 years at 46.46%, which decreased to 39.55% over 5 years. In contrast, Tesla showed the highest 5-year returns of 94.02% (compared to 17.12% over 2 years).
+-   Adobe and Netflix experienced the most significant negative impact, with returns dropping from 44% and 32% over 2 years to 17% and 9% over 5 years, respectively.
+-   Conversely, Tesla had the most substantial positive impact, with returns increasing from 17% over 2 years to an impressive 94% over 5 years.
 
 **Conclusion**:
 
@@ -514,17 +514,17 @@ left_join(gain_days,big_tech_companies) |>
 
 **Plot1**:
 
-- Most companies share a consistent number of positive gain days, averaging around 130 each year.
-- An exception is 2022, where the number drops to 115 positive gain days.
-- Suggests a substantial market impact on all companies, as seen in previous analyses.
-- However, as the positive gain days are nearly the same across companies, it's challenging to draw direct conclusions about the specific slots for traders' decision-making from this plot.
+-   Most companies share a consistent number of positive gain days, averaging around 130 each year.
+-   An exception is 2022, where the number drops to 115 positive gain days.
+-   Suggests a substantial market impact on all companies, as seen in previous analyses.
+-   However, as the positive gain days are nearly the same across companies, it's challenging to draw direct conclusions about the specific slots for traders' decision-making from this plot.
 
 **Plot2**:
 
-- Clear distribution of positive gain days across weekdays for all companies.
-- Example: Adobe presents opportunities to buy on Monday and sell on Thursday.
-- Intel generally has higher positive gain days, except on Tuesday. 
-- Highlights the distinct buying and selling strategies for each company.
+-   Clear distribution of positive gain days across weekdays for all companies.
+-   Example: Adobe presents opportunities to buy on Monday and sell on Thursday.
+-   Intel generally has higher positive gain days, except on Tuesday.
+-   Highlights the distinct buying and selling strategies for each company.
 
 **Conclusion**:
 
