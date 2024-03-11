@@ -118,9 +118,7 @@ big_tech_stock_prices <- readr::read_csv('https://raw.githubusercontent.com/rfor
 big_tech_companies <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_companies.csv')
 
 
-# Read the datasets
-big_tech_stock_prices <- readr::read_csv('data/big_tech_stock_prices.csv')
-big_tech_companies <- readr::read_csv('data/big_tech_companies.csv')
+
 
 
 # Data Pre-processing for both the questions
