@@ -25,7 +25,7 @@ categories:
 #| code-summary: "Installed Packages"
 
 ### GETTING THE LIBRARIES
-devtools::install_github("choonghyunryu/dlookr")
+#devtools::install_github("choonghyunryu/dlookr")
 
 if (!require(pacman))
   install.packages(pacman)
@@ -34,7 +34,8 @@ if (!require(pacman))
 pacman::p_load(tidyverse,
                tidytuesdayR,
                dlookr,
-               formattable)
+               formattable,
+               here)
 ```
 
 ## Dataset
@@ -51,10 +52,9 @@ The Big Tech Stock Prices dataset offers a comprehensive and reliable source of 
 #| output: false
 #| warning: false
 
-# Loading the data from tidy tuesday repository
-bigtech <- tidytuesdayR::tt_load('2023-02-07')
-big_tech_stock_prices <- bigtech$big_tech_stock_prices
-big_tech_companies <- bigtech$big_tech_companies
+# Loading the data
+big_tech_stock_prices <- read_csv(here("data","big_tech_stock_prices.csv"))
+big_tech_companies <- read_csv(here("data","big_tech_companies.csv"))
 
 ```
 
@@ -79,7 +79,7 @@ big_tech_stock_prices |>
 [*Variable description*]{.underline}
 
 | variable       | class     | description                                                                                                                                                                                                                       |
-|-------------|-------------|----------------------------------------------|
+|---------------|---------------|------------------------------------------|
 | `stock_symbol` | character | stock_symbol                                                                                                                                                                                                                      |
 | `date`         | double    | date                                                                                                                                                                                                                              |
 | `open`         | double    | The price at market open.                                                                                                                                                                                                         |
