@@ -3,236 +3,114 @@ title: "Big Tech Stock Prices"
 subtitle: "INFO 526 - Spring 2024 - Project 1"
 author: "Team Crimson: Arun, Jasdeep, Mohit, Pradnya, Varun"
 title-slide-attributes:
-<<<<<<< Updated upstream
   data-background-image: images/stock-exchange-642896_1280.jpg
   #watercolour_sys02_img34_teacup-ocean.jpg
-=======
-  data-background-image: images/stock_prices.png
->>>>>>> Stashed changes
   data-background-size: stretch
-  data-background-opacity: "0.8"
+  data-background-opacity: "0.7"
   data-slide-number: none
 format:
   revealjs:
-    theme:  ['data/customtheming.scss']
-    transition: slide
-    background-transition: fade
-    logo: images\stock_logo.png
-    footer: "[💲 The Crimson](https://info-526-s24.github.io/project-01-Crimson/)"
-    scrollable: true
-
+    theme:  beige
 editor: visual
 execute:
-  warning: false
   echo: false
 ---
 
-```{r load_packages, message=FALSE, include=FALSE}
-# GETTING THE LIBRARIES
-#devtools::install_github("choonghyunryu/dlookr")
+```{r}
+#| label: load-packages
+#| include: false
 
-if (!require(pacman))
-  install.packages(pacman)
-
-# Loading the libraries
-pacman::p_load(tidyverse,
-               tidytuesdayR,
-               dlookr,
-               ggthemes,
-               ggplot2,
-               gganimate,
-               dplyr,
-               ggridges,
-               formattable,
-               plotly,
-               broom,
-               cowplot,
-               gifski,
-               here,
-               magick)
+# Load packages here
+pacman::p_load(tidymodels,
+               tidyverse)
 
 ```
 
-```{r ggplot_setup, message=FALSE, include=FALSE}
-# setting theme for ggplot2
-ggplot2::theme_set(ggplot2::theme_minimal(base_size = 14, base_family = "sans"))
+```{r}
+#| label: setup
+#| include: false
 
-# setting width of code output
-options(width = 65)
+# Plot theme
+ggplot2::theme_set(ggplot2::theme_minimal(base_size = 11))
 
-# setting figure parameters for knitr
+# For better figure resolution
 knitr::opts_chunk$set(
-  fig.width = 8,        # 8" width
-  fig.asp = 0.618,      # the golden ratio
-  fig.retina = 1,       # dpi multiplier for displaying HTML output on retina
-  fig.align = "center", # center align figures
-  dpi = 140             # higher dpi, sharper image
-)
-```
-
-```{r load_dataset, message=FALSE, include=FALSE}
-
-# Getting all the underlying data in the dataset
-Tech_companies      <- read.csv(here("data", "big_tech_companies.csv"))
-Tech_stock_prices   <- read.csv(here("data", "big_tech_stock_prices.csv"))
-
-```
-
-## Stock prices Datase for Big Tech companies {.smaller auto-animate="true"}
-::: incremental
--   "Big Tech Stock Price" & "Big Tech Companies" datasets from [tidytuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data/2023/2023-02-07).
--   Includes opening, closing, high, and low prices for company.
--   Data spans several years, allowing for in-depth analysis and trends.
--   Our Data:
-    -   `Tech_companies` dataset
-    -   `Tech_stock_prices` data
-:::
-
-## Aim {auto-animate="true"}
-
-::: columns
-::: {.column width="70%"}
--   performance of 14 major tech firms over the past decade
--   trends and patterns focusing on COVID-19 pandemic
--   informed decision-making
-:::
-
-::: {.column width="30%"}
-![](images/Presentation/first_slide.gif){fig-align="right" height="450" width="450"}
-:::
-:::
-
-## Question 1 {.smaller}
-
-**Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?**
-
-### For First Plot
-
-::: incremental
--   Drop in stock prices in H1 2020 due to Covid-19 pandemic
-
--   Adobe , Netflix showed significant drop in stock prices during 2020-2023
-
--   Tesla showed highest increase during 2020-2023
-
--   Tesla stock prices increase in due to EV sales- release of new models/ Green Subsidy Push
-
--   Reasons for stock price drop in 2022 - slowdown in sales, recession fears, increase in unemployment rate etc.
-:::
-
-## Plot 1
-
-```{r world_data, message=FALSE, include=FALSE}
-# Loading the data from tidy tuesday repository
-#bigtech <- tidytuesdayR::tt_load('2023-02-07')
-big_tech_stock_prices <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv')
-big_tech_companies <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_companies.csv')
-
-
-# Read the datasets
-big_tech_stock_prices <- readr::read_csv('data/big_tech_stock_prices.csv')
-big_tech_companies <- readr::read_csv('data/big_tech_companies.csv')
-
-
-# Data Pre-processing for both the questions
-big_tech_companies <- big_tech_companies |>
-  mutate(
-    CompanyName = str_replace(company, " Inc", ""),
-    CompanyName = if_else(stock_symbol == "IBM", "IBM", CompanyName),
-    CompanyName = str_replace(CompanyName, ",", ""),
-    CompanyName = str_replace(CompanyName, ".com", ""),
-    CompanyName = str_replace(CompanyName, "\\.", ""),
-    CompanyName = str_replace(CompanyName, "Corporation", ""),
-    CompanyName = str_replace(CompanyName, "Systems", ""),
-    CompanyName = str_replace(CompanyName, "Platforms", ""),
-    CompanyName = str_trim(CompanyName) 
+  fig.retina = 3, 
+  dpi = 300, 
+  fig.width = 6, 
+  fig.asp = 0.618 
   )
 ```
 
-```{r Plot-1, message=FALSE, echo=FALSE}
-plot1 <-  left_join(big_tech_stock_prices,big_tech_companies) |> 
-          ggplot(aes(x=date,y=adj_close , color = CompanyName)) + 
-          geom_line() + scale_colour_manual(name = "Company", 
-                                            values = c("orange", "grey", "grey", "grey", "grey",
-                                                       "grey", "grey", "grey", "grey","brown",
-                                                       "grey", "grey", "grey", "grey")) +
-          scale_x_date(breaks = seq(from = as.Date("2010-01-01"),
-                                    to = as.Date("2022-01-01"),
-                                    by = "2 years"),
-                       minor_breaks = "1 year",
-                       date_labels = "%Y") +
-          scale_y_continuous(limits = c(0, 750)) +
-          annotate(
-            "text",
-            x = as.Date("2020-03-17"),
-            y = 680,
-            label = "COVID-19 \n Pandemic",
-            vjust = -0.5,  # Adjust vertical position of the label
-            color = "cornsilk4"
-          ) +
-          geom_vline(
-            xintercept = as.numeric(as.Date("2021-11-17")),
-            linetype = "dashed",
-            color = "darkgreen"
-          ) +
-          annotate(
-            "text",
-            x = as.Date("2021-11-17"),
-            y = 680,
-            label = "Lower Ad \n Revenue",
-            vjust = -0.5,  # Adjust vertical position of the label
-            color = "darkred"
-          ) +
-          geom_vline(
-            xintercept = as.numeric(as.Date("2020-03-17")),
-            linetype = "dashed",
-            color = "darkgreen"
-          ) +
-          labs(
-            x = "Year", 
-            y = "Stock Price", 
-            fill = NULL,
-            title = ""
-          ) + 
-          theme_minimal() +
-          theme(
-            legend.position = c(0.10,0.6),
-            legend.box.background = element_rect(fill = "white",
-                                                 color = "white"),
-            legend.title = element_blank()
-          ) +
-          annotate(
-            "text",
-            x = as.Date("2015-05-17"),
-            y = 300,
-            label = "Highlighted companies in 2022 
-            have faced internal challenges, 
-            such as a slowdown in subscribers for Netflix
-            and pricing factors affecting Adobe",
-            vjust = -0.5,  # Adjust vertical position of the label
-            color = "darkred",
-            size = 3,
-            fontface = "italic"
-          ) +
-          annotate(
-            "text",
-            x = as.Date("2016-11-17"),
-            y = 500,
-            label = "All tech companies have seen an initial fall 
-            when COVID was declared a pandemic, 
-            but later, during the quarantine, 
-            the benefits of technology are conspicuous",
-            vjust = -0.5,  # Adjust vertical position of the label
-            color = "cornsilk4",
-            size = 3, 
-            fontface = "italic"
-        )
+```{r}
+#| label: load-data
+#| include: false
+# Load data here
+data(mtcars)
+mtcars$speed <- mtcars$hp / mtcars$wt
 
-plot1
-
+data("penguins")
 ```
 
-## Second plot ( Detrended plots ) {.smaller}
+# Exploring the daily stock prices and trading volumes of top tech companies
+
+## Dataset
+
+::: incremental
+-   Daily stock prices of 14 tech giants like Apple, Amazon, and Google.
+-   Includes opening, closing, high, and low prices for each company.
+-   Data spans several years, allowing for in-depth analysis and trends.
+-   Valuable resource for investors, analysts, and researchers in the tech sector.
+:::
+
+## Data Analysis Opportunities
+
+::: columns
+::: {.column width="50%"}
+::: incremental
+Benefits of Analysis
+
+-   Insights gained into market trends and performance
+-   Decision-making and strategic planning based on real-time data
+-   In-depth analysis can uncover correlations and patterns
+:::
+:::
+
+::: {.column width="50%"}
+::: incremental
+Challenges of Analysis
+
+-   Large datasets requires a significant time investment
+-   Interpreting data with financial information
+-   Risk of information overload
+:::
+:::
+:::
+
+## Decade-Long Data Trends
+
+### Crisis to Pandemic
+
+::: incremental
+-   Analyzing economic shifts post-financial crisis
+-   Identifying patterns leading to market volatility
+-   Impact of COVID-19 on global financial markets
+-   Exploring resilience and recovery strategies
+:::
+
+## Question 1: Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?
+
+First Plot
+
+::: incremental
+-   Drop in stock prices in H1 2020 due to Covid-19 pandemic
+-   Adobe , Netflix showed significant drop in stock prices during 2020-2023
+-   Tesla showed highest increase during 2020-2023
+-   Tesla stock prices increase in due to EV sales- release of new models/ Green Subsidy Push
+-   Reasons for stock price drop in 2022 - slowdown in sales, recession fears, increase in unemployment rate etc.
+:::
+
+Second plot ( Detrended plots )-
 
 ::: incremental
 -   Most of the stocks show stock price ratio deviations in last 3 years 2020-2022
@@ -240,45 +118,7 @@ plot1
 -   Adobe/Netflix shows increase initially but then fall below line during 2020-2022
 :::
 
-## Plot 2
-
-```{r Plot-2, message=FALSE, echo=FALSE}
-models <- big_tech_stock_prices |>
-  group_by(stock_symbol) |>
-  group_modify(~ augment(lm(adj_close ~ date, data = .))) |>
-  mutate(ratio = adj_close /.fitted, .after = .fitted) |>
-  select(stock_symbol,date,adj_close,ratio)
-
-
-plot2 <- 
-  left_join(models,big_tech_companies) |>
-  ggplot(aes(x = date, y = ratio, color = CompanyName)) +
-  geom_line() + scale_colour_manual(name = "Company", 
-                                    values = c("orange", "grey", "grey", 
-                                               "grey", "grey","grey", 
-                                               "grey", "grey", "grey",
-                                               "brown","grey", "grey", 
-                                               "grey", "grey")) +
-  geom_hline(yintercept = 1, color = "darkgreen") +
-  scale_x_date(breaks = seq(from = as.Date("2010-01-01"), to = as.Date("2023-01-01"),
-                            by = "2 years"), minor_breaks = "1 year", date_labels = "%Y") + 
-  coord_cartesian(ylim = c(0, 2) , 
-                  xlim = c(as.Date("2018-01-01"), as.Date("2023-01-01"))) +
-  labs(
-    title = "Stock Price Changes over 5 Years",
-    subtitle = "2018-2022 (Detrended)",
-    x = "Year", 
-    y = "Stock Price Ratio \n (detrended)"
-  ) + 
-  facet_wrap(~CompanyName) + 
-  guides(color = "none") + 
-  theme_minimal()
-
-plot2
-```
-
-
-## Third plot (Average Stock Price Returns Per Year) for period (2018-2019) and (2018-2022) {.smaller}
+Third plot (Average Stock Price Returns Per Year) for period (2018-2019) and (2018-2022)
 
 ::: incremental
 -   Microsoft had highest returns over 2 years 46.46% (39.55% over 5 years)
@@ -287,223 +127,88 @@ plot2
 -   Tesla - highest positive impact from 17% ( 2 years)to 94% (5 years)
 :::
 
-## Plot 3
+## Question 2: What patterns do we see in the positive gain days over the given period?
 
-```{r Plot-3, message=FALSE, echo=FALSE}
-dates = big_tech_stock_prices |> 
-  group_by(year(date)) |> 
-  summarize(min_date = min(date), max_date = max(date))
-
-dates = c("2018-01-02","2020-01-02", "2022-12-29")
-
-closings = big_tech_stock_prices |>
-  filter(as.Date(date) %in% as.Date(dates)) |>
-  mutate(year=year(date)) |> 
-  select(stock_symbol,year,adj_close) |> 
-  pivot_wider(names_from = stock_symbol, values_from = adj_close) |> 
-  column_to_rownames(var = "year") |> 
-  t() |>  
-  as.data.frame() |> 
-  rownames_to_column(var="stock_symbol") |> 
-  mutate(
-    Two_Years = round(((`2020` - `2018`)/`2018`)*100/2,2), 
-    Five_Years = round(((`2022` - `2018`)/`2018`)*100/5,2)
-  ) |> 
-  select(stock_symbol,Two_Years,Five_Years) 
-
-
-plot3 <- 
-  left_join(closings,big_tech_companies) |> 
-  ggplot(aes( x = reorder(CompanyName, Two_Years), Two_Years, fill = CompanyName)) + 
-  scale_fill_manual(name = "Company", 
-                      values = c("orange", "#fde725", "#c2df23", 
-                                 "#86d549", "#52c569","#2ab07f", 
-                                 "#1e9b8a", "#25858e", "#2d708e",
-                                 "brown","#38588c", "#433e85", 
-                                 "#482173", "#440154")) + 
-  geom_bar(stat = "identity") + 
-  coord_flip() + 
-  labs(
-    x = "Two Year Returns",
-    y = "% Returns",
-    title = "Avg. of two year returns %",
-    subtitle = "2018 to 2020; Pre-Pandemic"
-  ) +
-  theme_minimal() + 
-  guides(fill = "none") 
-  
-
-plot4 <- 
-  left_join(closings,big_tech_companies) |> 
-  ggplot(aes( x = reorder(CompanyName, Five_Years), Five_Years, fill = CompanyName)) + 
-  scale_fill_manual(name = "Company", 
-                    values = c("orange", "#fde725", "#c2df23", 
-                               "#86d549", "#52c569","#2ab07f", 
-                               "#1e9b8a", "#25858e", "#2d708e",
-                               "brown","#38588c", "#433e85", 
-                               "#482173", "#440154")) + 
-  geom_bar(stat = "identity") + 
-  coord_flip() + 
-  labs(
-    x = "Five Year Returns",
-    y = "% Returns",
-    title = "Avg. of five year returns %",
-    subtitle = "2018 to 2023"
-  ) +
-  theme_minimal() + 
-  guides(fill = "none") 
-
-
-cowplot::plot_grid(plot3,plot4, ncol = 2)
-
-```
-
-
-## Question 2:{.smaller}
-
-**What patterns do we see in the positive gain days over the given period?**
-
-### First Plot: 
-
-::: incremental
-
--   The analysis of gain days across different companies reveals a consistent number of positive gain days, averaging around 130 each year.
--   However, there is an exception in 2022, where the number drops to 115 positive gain days, indicating a substantial market impact on all companies.
--   While positive gain days are nearly the same across companies, making it challenging to draw direct conclusions, this data provides insights into overall market trends and fluctuations over the analyzed period.
-:::
-
-## Plot -1
-```{r animated, message=FALSE}
-#| code-fold: true
-#| code-summary: "Animation of the plots"
-# Merge data
-merged_data <- inner_join(big_tech_stock_prices, big_tech_companies, by = "stock_symbol")
-
-# Function to compute gain days
-compute_gain_days <- function(x) {
-  gain_days <- sum(x[-1] > x[-length(x)])
-  return(gain_days)
-}
-
-# Group data by year and company, calculate gain days
-grouped_data <- merged_data |>
-  group_by(year = year(date), CompanyName) |>
-  summarize(GainDays = compute_gain_days(close),.groups = "drop")
-
-# Order the companies based on total gain days within each year
-grouped_data <- grouped_data |>
-  group_by(year) |>
-  mutate(Rank = rank(-GainDays)) |>
-  arrange(year, Rank) |>
-  ungroup()
-
-# Plot
-bar_color <- c("orange", "#fde725", "#c2df23", "#86d549", "#52c569", "#2ab07f", "#1e9b8a", 
-               "#25858e", "#2d708e", "brown", "#38588c", "#433e85", "#482173", "#440154")
-
-animated_plot <- ggplot(grouped_data) +
-  geom_col(aes(x = GainDays,
-               y = fct_reorder(CompanyName, GainDays),
-               fill = CompanyName),
-           width = 0.9) +
-  geom_text(aes(x = GainDays, y = CompanyName, label = GainDays),
-            hjust = -0.02, vjust = 0.5) +
-  theme_minimal() +
-  theme(axis.text.y = element_text(size = 10),
-        axis.ticks.y = element_blank(),
-        plot.margin = unit(c(1, 1, 3, 1), 'lines'),
-        legend.position = "none",
-        panel.grid.major=element_blank(),
-        panel.grid.minor=element_blank(),
-        panel.grid.major.x = element_line( size=.01, color="grey" )) +
-  labs(
-    x = "Gain Days",
-    y = NULL
-  ) +
-  scale_x_continuous(breaks = seq(0, max(grouped_data$GainDays), by = 50)) +
-  ggtitle('Yearwise Gain Days of Big Tech Companies: {closest_state}') +
-  scale_fill_manual(values = bar_color) +
-  transition_states(year,
-                    transition_length = 7,
-                    state_length = 1000)
-```
-
-```{r amintation2, message=FALSE}
-#| code-fold: true
-#| code-summary: "Animation of soybean usage"
-#Code to animate the plot using gganimate package
-
-anim_save("animated_plot.gif", animated_plot,renderer = gifski_renderer())
-
-# Load the animated GIF
-plot_animation <- image_read("animated_plot.gif")
-
-# Display the animation
-plot_animation |>
-  image_animate(fps = 5) 
-
-```
-
-## Second Plot:{.smaller auto-animate="true"}
-
-
--   Clear distributions of positive gain days across weekdays for all companies are observed.
-For example, Adobe presents opportunities to buy on Monday and sell on Thursday, while    -   Intel generally has higher positive gain days except on Tuesday.
--   These distinct buying and selling strategies for each company highlight the importance of considering weekday patterns in trading decisions, providing valuable insights for short-term investors.
-
-## Plot 2
-
-```{r Plot-2 gains, message=FALSE, echo=FALSE}
- # Calculate gain days
-gain_days <- big_tech_stock_prices |>
-  mutate(
-    year = lubridate::year(date) ,
-    quarter = lubridate::quarter(date),
-    weekday = weekdays(date),
-    gain = if_else(close - open > 0, 1, 0)
-  ) |> 
-  group_by(stock_symbol,year,quarter,weekday) |>
-  summarise(gain_count = sum(gain), .groups = "drop")
-
-weekday_order <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
-
-company_colors <- c(
-  "Adobe" = "orange", 
-  "Alphabet" = "#fde725", 
-  "Amazon" = "#c2df23", 
-  "Apple" = "#86d549", 
-  "Cisco" = "#52c569",
-  "IBM" = "#2ab07f", 
-  "Intel" = "#1e9b8a", 
-  "Meta" = "#25858e", 
-  "Microsoft" = "#2d708e",
-  "Netflix" = "brown",
-  "NVIDIA" = "#38588c", 
-  "Oracle" = "#433e85", 
-  "Salesforce" = "#482173", 
-  "Tesla" = "#440154"
-)
-
-# Join the data and Plot density ridges
-left_join(gain_days,big_tech_companies) |>
-  ggplot(aes(x = gain_count, y = factor(weekday, levels = weekday_order),
-             fill = CompanyName)) +
-  geom_density_ridges(scale = 3, rel_min_height = 0.01, alpha = 0.7) +
-  scale_fill_manual(values = company_colors) +
-  labs(title = "Distribution of Gain Days by Weekday",
-       subtitle = "Averaged per Quarter in last 10 years",
-       x = NULL,
-       y = NULL) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        axis.line = element_line(color = "black"),
-        plot.title = element_text(size = 16, face = "bold"),
-        axis.title = element_text(size = 12, face = "bold"),
-        legend.position = "none") +
-  coord_cartesian(xlim = c(0, 12)) + facet_wrap(~ CompanyName)
-```
+-   Some content
 
 # THANK YOU
+
+## Code(Extra slide- needs to be removed)
+
+```{r, echo=FALSE}
+model <- lm(mpg ~ speed, data = mtcars) 
+
+model |> tidy()
+
+model |> glance()
+
+```
+
+## Plots(Extra slide- needs to be removed)
+
+```{r}
+penguins |>
+  mutate(species = ifelse(species == "Adelie", "Adelie", "Other")) |>
+  ggplot(aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point()
+```
+
+## Plot and text(Extra slide- needs to be removed)
+
+::: columns
+::: {.column width="50%"}
+-   Some text
+
+-   goes here
+:::
+
+::: {.column width="50%"}
+```{r, warning=FALSE, fig.width=5.5}
+penguins |>
+  ggplot(aes(x = bill_length_mm, y = species, color = species)) +
+  geom_boxplot(linewidth = 0.75,
+               outlier.size = 2.5) +
+  theme_minimal(base_size = 15) +
+  theme(legend.key.size = unit(0.8, "cm"))
+```
+:::
+:::
+
+## Tables(Extra slide- needs to be removed)
+
+If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
+
+```{r}
+penguins |> 
+  head() |>
+  kableExtra::kable() |>
+  kableExtra::kable_styling()
+```
+
+## Images(Extra slide- needs to be removed)
+
+![Image credit: Danielle Navarro, Percolate.](images/watercolour_sys02_img34_teacup-ocean.png){fig-align="center" width="500"}
+
+## Math Expressions(Extra slide- needs to be removed) {.smaller}
+
+You can write LaTeX math expressions inside a pair of dollar signs, e.g. \$\\alpha+\\beta\$ renders $\alpha + \beta$. You can use the display style with double dollar signs:
+
+```         
+$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
+```
+
+$$
+\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i
+$$
+
+Limitations:
+
+1.  The source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting `$$` must appear in the very beginning of a line, followed immediately by a non-space character, and the ending `$$` must be at the end of a line, led by a non-space character;
+
+2.  There should not be spaces after the opening `$` or before the closing `$`.
+
+## Feeling adventurous?(Extra slide- needs to be removed)
+
+-   You are welcomed to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
+
+-   But some of you might want to play around with slide styling. Some solutions for this can be found at https://quarto.org/docs/presentations/revealjs.
