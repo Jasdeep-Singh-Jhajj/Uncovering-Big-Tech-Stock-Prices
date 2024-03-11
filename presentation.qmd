@@ -16,7 +16,7 @@ format:
     footer: "[💲 The Crimson](https://info-526-s24.github.io/project-01-Crimson/)"
     scrollable: true
 
-editor: visual
+editor: visual  
 execute:
   warning: false
   echo: false
@@ -65,13 +65,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r load_dataset, message=FALSE, include=FALSE}
 
-# Getting all the underlying data in the dataset
-Tech_companies      <- read.csv(here("data", "big_tech_companies.csv"))
-Tech_stock_prices   <- read.csv(here("data", "big_tech_stock_prices.csv"))
-
-```
 
 ## Stock prices Datase for Big Tech companies {.smaller auto-animate="true"}
 ::: incremental
@@ -80,7 +74,7 @@ Tech_stock_prices   <- read.csv(here("data", "big_tech_stock_prices.csv"))
 -   Data spans several years, allowing for in-depth analysis and trends.
 -   Our Data:
     -   `Tech_companies` dataset
-    -   `Tech_stock_prices` data
+    -   `Tech_stock_prices` dataset
 :::
 
 ## Aim {auto-animate="true"}
