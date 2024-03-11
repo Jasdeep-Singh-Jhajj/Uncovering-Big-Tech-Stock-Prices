@@ -6,7 +6,7 @@ website:
   navbar:
     right:
       - icon: github
-        href: https://github.com/INFO526-DataViz/project-01
+        href: https://info-526-s24.github.io/project-01-Crimson/
     left:
       - text: Project
         href: index.qmd

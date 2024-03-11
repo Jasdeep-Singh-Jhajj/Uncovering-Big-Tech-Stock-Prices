@@ -5,7 +5,7 @@ author: "Team Crimson: Arun, Jasdeep, Mohit, Pradnya, Varun"
 title-slide-attributes:
   data-background-image: images/background_presentation1.gif
   data-background-size: stretch
-  data-background-opacity: "0.8"
+  data-background-opacity: "0.6"
   data-slide-number: none
 format:
   revealjs:
@@ -48,13 +48,13 @@ pacman::p_load(tidyverse,
 ```
 
 ```{r ggplot_setup, message=FALSE, include=FALSE}
-# setting theme for ggplot2
+# Setting theme for ggplot2
 ggplot2::theme_set(ggplot2::theme_minimal(base_size = 14, base_family = "sans"))
 
-# setting width of code output
+# Setting width of code output
 options(width = 65)
 
-# setting figure parameters for knitr
+# Setting figure parameters for knitr
 knitr::opts_chunk$set(
   fig.width = 8,        # 8" width
   fig.asp = 0.618,      # the golden ratio
@@ -73,8 +73,8 @@ knitr::opts_chunk$set(
 -   Includes `open`, `close`, `high`, `low` and `adj_close` prices for company.
 -   Data spans from 2010 to 2022, allowing for in-depth analysis and trends.
 -   Our Data:
-    -   `Tech_companies` dataset
-    -   `Tech_stock_prices` dataset
+    -   `big_tech_companies` dataset
+    -   `big_tech_stock_prices` dataset
 :::
 
 ## Objective {auto-animate="true"}
@@ -83,8 +83,8 @@ knitr::opts_chunk$set(
 ::: {.column width="70%"}
 ::: {style="font-size: 75%;"}
 -   Delving into the performance of 14 leading tech companies, with a focus on understanding the influence of COVID-19.
--   Question 1: Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?
--   Question 2: What patterns do we see in the positive gain days over the given period?
+-   **Question 1**: Which companies have experienced the highest/lowest impact on their stock prices due to the pandemic?
+-   **Question 2**: What patterns do we see in the positive gain days over the given period?
 :::
 :::
 
@@ -146,9 +146,8 @@ knitr::opts_chunk$set(
 ::: panel-tabset
 ### Plot1 {.smaller}
 
-```{r world_data, message=FALSE, include=FALSE}
+```{r load_data, message=FALSE, include=FALSE}
 # Loading the data
-
 big_tech_stock_prices <- read_csv(here("data","big_tech_stock_prices.csv"))
 big_tech_companies <- read_csv(here("data","big_tech_companies.csv"))
 
@@ -168,15 +167,17 @@ big_tech_companies <- big_tech_companies |>
   )
 ```
 
-```{r Plot-1, message=FALSE, echo=FALSE}
+```{r Plot_1, message=FALSE, echo=FALSE}
 #| fig.asp: 0.5
 
 plot1 <-  left_join(big_tech_stock_prices,big_tech_companies) |> 
-          ggplot(aes(x=date,y=adj_close , color = CompanyName)) + 
-          geom_line() + scale_colour_manual(name = "Company", 
-                                            values = c("orange", "grey", "grey", "grey", "grey",
-                                                       "grey", "grey", "grey", "grey","brown",
-                                                       "grey", "grey", "grey", "grey")) +
+          ggplot(aes(x = date, y = adj_close , color = CompanyName)) + 
+          geom_line() +
+          scale_colour_manual(name = "Company",
+                              values = c("orange", "grey", "grey", "grey",
+                                         "grey", "grey", "grey", "grey",
+                                         "grey","brown", "grey", "grey",
+                                         "grey", "grey")) +
           scale_x_date(breaks = seq(from = as.Date("2010-01-01"),
                                     to = as.Date("2022-01-01"),
                                     by = "2 years"),
@@ -219,7 +220,7 @@ plot1 <-  left_join(big_tech_stock_prices,big_tech_companies) |>
           ) + 
           theme_minimal() +
           theme(
-            legend.position = c(0.10,0.6),
+            legend.position = c(0.10, 0.6),
             legend.box.background = element_rect(fill = "white",
                                                  color = "white"),
             legend.title = element_blank()
@@ -257,9 +258,8 @@ plot1
 
 ### Plot2 {.smaller}
 
-```{r Plot-2, message=FALSE, echo=FALSE}
+```{r Plot_2, message=FALSE, echo=FALSE}
 #| fig.asp: 0.5
-
 
 models <- big_tech_stock_prices |>
   group_by(stock_symbol) |>
@@ -271,15 +271,18 @@ models <- big_tech_stock_prices |>
 plot2 <- 
   left_join(models,big_tech_companies) |>
   ggplot(aes(x = date, y = ratio, color = CompanyName)) +
-  geom_line() + scale_colour_manual(name = "Company", 
-                                    values = c("orange", "grey", "grey", 
-                                               "grey", "grey","grey", 
-                                               "grey", "grey", "grey",
-                                               "brown","grey", "grey", 
-                                               "grey", "grey")) +
+  geom_line() +
+  scale_colour_manual(name = "Company",
+                      values = c("orange", "grey", "grey","grey",
+                                 "grey", "grey", "grey", "grey",
+                                 "grey", "brown", "grey", "grey",
+                                 "grey", "grey")) +
   geom_hline(yintercept = 1, color = "darkgreen") +
-  scale_x_date(breaks = seq(from = as.Date("2010-01-01"), to = as.Date("2023-01-01"),
-                            by = "2 years"), minor_breaks = "1 year", date_labels = "%Y") + 
+  scale_x_date(breaks = seq(from = as.Date("2010-01-01"),
+                            to = as.Date("2023-01-01"),
+                            by = "2 years"),
+               minor_breaks = "1 year",
+               date_labels = "%Y") + 
   coord_cartesian(ylim = c(0, 2) , 
                   xlim = c(as.Date("2018-01-01"), as.Date("2023-01-01"))) +
   labs(
@@ -297,7 +300,7 @@ plot2
 
 ### Plot3 {.smaller}
 
-```{r Plot-3, message=FALSE, echo=FALSE}
+```{r Plot_3, message=FALSE, echo=FALSE}
 #| fig.asp: 0.5
 
 dates = big_tech_stock_prices |> 
@@ -308,8 +311,8 @@ dates = c("2018-01-02","2020-01-02", "2022-12-29")
 
 closings = big_tech_stock_prices |>
   filter(as.Date(date) %in% as.Date(dates)) |>
-  mutate(year=year(date)) |> 
-  select(stock_symbol,year,adj_close) |> 
+  mutate(year = year(date)) |> 
+  select(stock_symbol, year, adj_close) |> 
   pivot_wider(names_from = stock_symbol, values_from = adj_close) |> 
   column_to_rownames(var = "year") |> 
   t() |>  
@@ -319,18 +322,19 @@ closings = big_tech_stock_prices |>
     Two_Years = round(((`2020` - `2018`)/`2018`)*100/2,2), 
     Five_Years = round(((`2022` - `2018`)/`2018`)*100/5,2)
   ) |> 
-  select(stock_symbol,Two_Years,Five_Years) 
+  select(stock_symbol, Two_Years, Five_Years) 
 
 
 plot3 <- 
-  left_join(closings,big_tech_companies) |> 
-  ggplot(aes( x = reorder(CompanyName, Two_Years), Two_Years, fill = CompanyName)) + 
-  scale_fill_manual(name = "Company", 
-                      values = c("orange", "#fde725", "#c2df23", 
-                                 "#86d549", "#52c569","#2ab07f", 
-                                 "#1e9b8a", "#25858e", "#2d708e",
-                                 "brown","#38588c", "#433e85", 
-                                 "#482173", "#440154")) + 
+  left_join(closings, big_tech_companies) |> 
+  ggplot(aes( x = reorder(CompanyName, Two_Years), Two_Years,
+              fill = CompanyName)) + 
+  scale_fill_manual(name = "Company",
+                    values = c("orange", "#fde725", "#c2df23",
+                               "#86d549", "#52c569","#2ab07f",
+                               "#1e9b8a", "#25858e", "#2d708e",
+                               "brown","#38588c", "#433e85",
+                               "#482173", "#440154")) + 
   geom_bar(stat = "identity") + 
   geom_text(aes(label = sprintf("%.2f%%", Two_Years), y = 48),
               color = "brown4", size = 3, fontface = "bold") +
@@ -347,7 +351,8 @@ plot3 <-
 
 plot4 <- 
   left_join(closings,big_tech_companies) |> 
-  ggplot(aes( x = reorder(CompanyName, Five_Years), Five_Years, fill = CompanyName)) + 
+  ggplot(aes( x = reorder(CompanyName, Five_Years), Five_Years,
+              fill = CompanyName)) + 
   scale_fill_manual(name = "Company", 
                     values = c("orange", "#fde725", "#c2df23", 
                                "#86d549", "#52c569","#2ab07f", 
@@ -432,9 +437,8 @@ cowplot::plot_grid(plot3,plot4, ncol = 2)
 ::: panel-tabset
 
 ### Plot1
-```{r animated, message=FALSE}
-#| code-fold: true
-#| code-summary: "Animation of the plots"
+
+```{r Q2_Plot_1, message=FALSE}
 # Merge data
 merged_data <- inner_join(big_tech_stock_prices, big_tech_companies, by = "stock_symbol")
 
@@ -460,8 +464,10 @@ grouped_data <- grouped_data |>
   filter(year != 2023)
 
 # Plot
-bar_color <- c("orange", "#fde725", "#c2df23", "#86d549", "#52c569", "#2ab07f", "#1e9b8a", 
-               "#25858e", "#2d708e", "brown", "#38588c", "#433e85", "#482173", "#440154")
+bar_color <- c("orange", "#fde725", "#c2df23", "#86d549",
+               "#52c569", "#2ab07f", "#1e9b8a", "#25858e",
+               "#2d708e", "brown", "#38588c", "#433e85",
+               "#482173", "#440154")
 
 animated_plot <- ggplot(grouped_data) +
   geom_col(aes(x = GainDays,
@@ -475,9 +481,10 @@ animated_plot <- ggplot(grouped_data) +
         axis.ticks.y = element_blank(),
         plot.margin = unit(c(1, 1, 3, 1), 'lines'),
         legend.position = "none",
-        panel.grid.major=element_blank(),
-        panel.grid.minor=element_blank(),
-        panel.grid.major.x = element_line( size=.01, color="grey" )) +
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_line( size=.01, color="grey" ),
+        plot.title = element_text(size = 16, face = "bold")) +
   labs(
     x = "Gain Days",
     y = NULL
@@ -490,7 +497,7 @@ animated_plot <- ggplot(grouped_data) +
                     state_length = 1000)
 ```
 
-```{r amintation2, message=FALSE}
+```{r Q2_Plot_1_animate, message=FALSE}
 #| fig.asp: 0.5
 
 
@@ -507,12 +514,12 @@ plot_animation |>
 
 ### Plot2
 
-```{r Plot-2 gains, message=FALSE, echo=FALSE}
+```{r Q2_Plot_2, message=FALSE, echo=FALSE}
 #| fig.height: 6
 #| fig.width: 10
 #| fig.asp: 0.5
 
- # Calculate gain days
+# Calculate gain days
 gain_days <- big_tech_stock_prices |>
   mutate(
     year = lubridate::year(date) ,
@@ -544,7 +551,8 @@ company_colors <- c(
 
 # Join the data and Plot density ridges
 left_join(gain_days,big_tech_companies) |>
-  ggplot(aes(x = gain_count, y = factor(weekday, levels = weekday_order),
+  ggplot(aes(x = gain_count,
+             y = factor(weekday, levels = weekday_order),
              fill = CompanyName)) +
   geom_density_ridges(scale = 3, rel_min_height = 0.01, alpha = 0.7) +
   scale_fill_manual(values = company_colors) +
@@ -580,5 +588,8 @@ left_join(gain_days,big_tech_companies) |>
 
 :::
 
+::: {style="text-align: center;"}
 
 # THANK YOU
+
+:::

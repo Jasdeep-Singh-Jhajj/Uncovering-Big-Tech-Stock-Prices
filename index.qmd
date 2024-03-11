@@ -127,10 +127,12 @@ big_tech_companies <- big_tech_companies |>
 
 plot1 <-  left_join(big_tech_stock_prices,big_tech_companies) |> 
           ggplot(aes(x=date,y=adj_close , color = CompanyName)) + 
-          geom_line() + scale_colour_manual(name = "Company", 
-                                            values = c("orange", "grey", "grey", "grey", "grey",
-                                                       "grey", "grey", "grey", "grey","brown",
-                                                       "grey", "grey", "grey", "grey")) +
+          geom_line() +
+          scale_colour_manual(name = "Company",
+                              values = c("orange", "grey", "grey", "grey",
+                                         "grey","grey", "grey", "grey",
+                                         "grey","brown","grey", "grey",
+                                         "grey", "grey")) +
           scale_x_date(breaks = seq(from = as.Date("2010-01-01"),
                                     to = as.Date("2022-01-01"),
                                     by = "2 years"),
@@ -234,8 +236,11 @@ plot2 <-
                                                "brown","grey", "grey", 
                                                "grey", "grey")) +
   geom_hline(yintercept = 1, color = "darkgreen") +
-  scale_x_date(breaks = seq(from = as.Date("2010-01-01"), to = as.Date("2023-01-01"),
-                            by = "2 years"), minor_breaks = "1 year", date_labels = "%Y") + 
+  scale_x_date(breaks = seq(from = as.Date("2010-01-01"),
+                            to = as.Date("2023-01-01"),
+                            by = "2 years"),
+               minor_breaks = "1 year",
+               date_labels = "%Y") + 
   coord_cartesian(ylim = c(0, 2) , 
                   xlim = c(as.Date("2018-01-01"), as.Date("2023-01-01"))) +
   labs(
@@ -269,8 +274,8 @@ dates = c("2018-01-02","2020-01-02", "2022-12-29")
 
 closings = big_tech_stock_prices |>
   filter(as.Date(date) %in% as.Date(dates)) |>
-  mutate(year=year(date)) |> 
-  select(stock_symbol,year,adj_close) |> 
+  mutate(year = year(date)) |> 
+  select(stock_symbol, year, adj_close) |> 
   pivot_wider(names_from = stock_symbol, values_from = adj_close) |> 
   column_to_rownames(var = "year") |> 
   t() |>  
@@ -285,7 +290,8 @@ closings = big_tech_stock_prices |>
 
 plot3 <- 
   left_join(closings,big_tech_companies) |> 
-  ggplot(aes( x = reorder(CompanyName, Two_Years), Two_Years, fill = CompanyName)) + 
+  ggplot(aes( x = reorder(CompanyName, Two_Years), Two_Years,
+              fill = CompanyName)) + 
   scale_fill_manual(name = "Company", 
                       values = c("orange", "#fde725", "#c2df23", 
                                  "#86d549", "#52c569","#2ab07f", 
@@ -416,8 +422,10 @@ grouped_data <- grouped_data |>
   filter(year != 2023)
 
 # Plot
-bar_color <- c("orange", "#fde725", "#c2df23", "#86d549", "#52c569", "#2ab07f", "#1e9b8a", 
-               "#25858e", "#2d708e", "brown", "#38588c", "#433e85", "#482173", "#440154")
+bar_color <- c("orange", "#fde725", "#c2df23", "#86d549",
+               "#52c569", "#2ab07f", "#1e9b8a", "#25858e",
+               "#2d708e", "brown", "#38588c", "#433e85",
+               "#482173", "#440154")
 
 animated_plot <- ggplot(grouped_data) +
   geom_col(aes(x = GainDays,
@@ -431,8 +439,8 @@ animated_plot <- ggplot(grouped_data) +
         axis.ticks.y = element_blank(),
         plot.margin = unit(c(1, 1, 3, 1), 'lines'),
         legend.position = "none",
-        panel.grid.major=element_blank(),
-        panel.grid.minor=element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
         panel.grid.major.x = element_line( size=.01, color="grey" )) +
   labs(
     x = "Gain Days",
@@ -450,7 +458,7 @@ animated_plot
 
 ```
 
-```{r q2_graph1}
+```{r}
 #| label: q2_graph2
 #| message: FALSE
 #| warning: FALSE
@@ -460,7 +468,7 @@ animated_plot
 #| fig-align: center
 #| dpi: 300
 
- # Calculate gain days
+# Calculate gain days
 gain_days <- big_tech_stock_prices |>
   mutate(
     year = lubridate::year(date) ,
@@ -509,7 +517,8 @@ left_join(gain_days,big_tech_companies) |>
         plot.title = element_text(size = 16, face = "bold"),
         axis.title = element_text(size = 12, face = "bold"),
         legend.position = "none") +
-  coord_cartesian(xlim = c(0, 12)) + facet_wrap(~ CompanyName)
+  coord_cartesian(xlim = c(0, 12)) +
+  facet_wrap(~ CompanyName)
 ```
 
 ### Discussion
