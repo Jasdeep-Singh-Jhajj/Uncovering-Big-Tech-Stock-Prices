@@ -3,7 +3,7 @@ title: "Big Tech Stock Prices"
 subtitle: "INFO 526 - Spring 2024 - Project 1"
 author: "Team Crimson: Arun, Jasdeep, Mohit, Pradnya, Varun"
 title-slide-attributes:
-  data-background-image: images/stock_prices.png
+  data-background-image: images/background.gif
   data-background-size: stretch
   data-background-opacity: "0.8"
   data-slide-number: none
@@ -87,7 +87,7 @@ knitr::opts_chunk$set(
 :::
 
 ::: {.column width="30%"}
-![](images/Presentation/first_slide.gif){fig-align="right" height="450" width="450"}
+![](images/first_slide.gif){fig-align="right" height="450" width="450"}
 :::
 :::
 
@@ -116,9 +116,6 @@ knitr::opts_chunk$set(
 #bigtech <- tidytuesdayR::tt_load('2023-02-07')
 big_tech_stock_prices <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv')
 big_tech_companies <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_companies.csv')
-
-
-
 
 
 # Data Pre-processing for both the questions
