@@ -2,6 +2,8 @@
 
 This project analyzes stock price patterns of major tech companies between 2010 and 2022, with a particular focus on the impact of significant events like COVID-19. The goal is to explore stock price trends and provide insights into how different companies reacted to market events over time. Using advanced data visualization techniques, the project highlights key trends and returns, making it a valuable tool for decision-making and strategic planning.
 
+For a more detailed exploration of the project, you can visit the original project site [Uncovering Big Tech Stock Prices](https://info-526-s24.github.io/project-01-Crimson/).
+
 ## Overview
 
 This data visualization project is dedicated to uncovering patterns within the stock prices of major tech companies over the past decade, with a particular focus on understanding the impact of significant events such as COVID-19. Employing visualization techniques like bar plots and line plots, the project serves as a vital tool for interpreting the dynamics of stock prices. In its second phase, the project provides a nuanced exploration of stock price trends across financial quarters and weekdays, offering stakeholders valuable insights for decision-making and strategic planning. The dataset, originating from the TidyTuesday project, spans 12 years and encompasses 14 leading technology companies, providing a rich source for comprehensive analysis of various aspects of the stock market. It's worth noting that, given limitations in accessing broader economic indicators, the project refrains from establishing causality and instead focuses on observing trends and returns as key indicators.
